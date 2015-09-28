@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * # Limit
  *
- * Limits the request body to a specific amount of bytes. If the request body contains more bytes than the allowed
+ * Limits the getRequest body to a specific amount of bytes. If the getRequest body contains more bytes than the allowed
  * limit an *413* error is sent back to the client.
  */
 public class Limit implements Handler<Context> {
@@ -37,10 +37,10 @@ public class Limit implements Handler<Context> {
 
   @Override
   public void handle(@NotNull final Context ctx) {
-    if (ctx.request().hasBody()) {
-      ctx.request().setMaxLength(limit);
+    if (ctx.getRequest().hasBody()) {
+      ctx.getRequest().setMaxLength(limit);
 
-      long len = ctx.request().getLength();
+      long len = ctx.getRequest().getLength();
       // limit by content-length
       if (len > limit) {
         ctx.fail(Status.PAYLOAD_TOO_LARGE);

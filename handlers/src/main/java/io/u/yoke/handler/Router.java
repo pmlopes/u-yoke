@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 /**
  * # Router
  * <p>
- * Route request by path or regular expression. All *HTTP* verbs are available:
+ * Route getRequest by path or regular expression. All *HTTP* verbs are available:
  * <p>
  * * `GET`
  * * `PUT`
@@ -35,8 +35,8 @@ import java.util.regex.Pattern;
  * <pre>
  * new Router() {{
  *   get("/hello", new JMXHandler&lt;YokeRequest&gt;() {
- *     public void handle(YokeRequest request) {
- *       request.response().end("Hello World!");
+ *     public void handle(YokeRequest getRequest) {
+ *       getRequest.getResponse().end("Hello World!");
  *     }
  *   });
  * }}
@@ -57,7 +57,7 @@ public class Router implements Handler<Context> {
   @Override
   public void handle(@NotNull final Context context) {
 
-    final List<Route> handlers = routes.get(context.request().getMethod());
+    final List<Route> handlers = routes.get(context.getRequest().getMethod());
     final AbstractContext ctx = (AbstractContext) context;
 
     ctx.setIterator(handlers);
@@ -312,7 +312,7 @@ public class Router implements Handler<Context> {
 
   public Router param(@NotNull final String paramName, @NotNull final NativeRegExp regex) {
     return param(paramName, (@NotNull final Context ctx) -> {
-      if (!regex.test(ctx.request().getParam(paramName))) {
+      if (!regex.test(ctx.getRequest().getParam(paramName))) {
         // Bad Request
         ctx.fail(Status.BAD_REQUEST);
         return;
@@ -324,7 +324,7 @@ public class Router implements Handler<Context> {
 
   public Router param(@NotNull final String paramName, @NotNull final Pattern regex) {
     return param(paramName, (@NotNull final Context ctx) -> {
-      if (!regex.matcher(ctx.request().getParam(paramName)).matches()) {
+      if (!regex.matcher(ctx.getRequest().getParam(paramName)).matches()) {
         // Bad Request
         ctx.fail(Status.BAD_REQUEST);
         return;

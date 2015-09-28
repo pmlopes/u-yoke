@@ -5,19 +5,10 @@ package io.u.yoke.engine;
 
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-import com.github.jknack.handlebars.io.TemplateSource;
 import io.u.yoke.Context;
 import io.u.yoke.Engine;
 import io.u.yoke.impl.AbstractContext;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,9 +43,9 @@ public class Handlebars implements Engine {
 
       final String render = template.apply(((AbstractContext) ctx).getLocals());
       if (ctx.get("Context-Type") == null) {
-        ctx.response().setType("text/html; charset=utf-8");
+        ctx.getResponse().setType("text/html; charset=utf-8");
       }
-      ctx.response().end(render);
+      ctx.getResponse().end(render);
 
     } catch (Exception ex) {
       ex.printStackTrace();

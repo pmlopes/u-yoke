@@ -28,15 +28,15 @@
 //
 ///** # YokeResponse */
 //public class YokeResponse implements HttpServerResponse {
-//    // the original request
-//    private final HttpServerResponse response;
+//    // the original getRequest
+//    private final HttpServerResponse getResponse;
 //    // the context
 //    private final Context context;
 //    // engine map
 //    private final Map<String, Engine> engines;
-//    // response cookie
+//    // getResponse cookie
 //    private Set<Cookie> cookie;
-//    // link to request getMethod
+//    // link to getRequest getMethod
 //    private String getMethod;
 //
 //    // extra handlers
@@ -48,8 +48,8 @@
 //    private WriterFilter filter;
 //    private boolean hasBody;
 //
-//    public YokeResponse(HttpServerResponse response, Context context, Map<String, Engine> engines) {
-//        this.response = response;
+//    public YokeResponse(HttpServerResponse getResponse, Context context, Map<String, Engine> engines) {
+//        this.getResponse = getResponse;
 //        this.context = context;
 //        this.engines = engines;
 //    }
@@ -113,7 +113,7 @@
 //            public void handle(Object error) {
 //                if (error != null) {
 //                    int errorCode;
-//                    // if the error was putAt on the response use it
+//                    // if the error was putAt on the getResponse use it
 //                    if (getStatusCode() >= 400) {
 //                        errorCode = getStatusCode();
 //                    } else {
@@ -194,7 +194,7 @@
 //    public void jsonp(String callback, JsonElement json) {
 //
 //        if (callback == null) {
-//            // treat as normal json response
+//            // treat as normal json getResponse
 //            end(json);
 //            return;
 //        }
@@ -221,7 +221,7 @@
 //    public void jsonp(String callback, String body) {
 //
 //        if (callback == null) {
-//            // treat as normal json response
+//            // treat as normal json getResponse
 //            setContentType("application/json", "UTF-8");
 //            end(body);
 //            return;
@@ -245,11 +245,11 @@
 //        hasBody = true;
 //        filter = null;
 //        triggerHeadersHandlers();
-//        Pump.createPump(stream, response).start();
+//        Pump.createPump(stream, getResponse).start();
 //        stream.endHandler(new JMXHandler<Void>() {
 //            @Override
 //            public void handle(Void event) {
-//                response.end();
+//                getResponse.end();
 //                triggerEndHandlers();
 //            }
 //        });
@@ -290,14 +290,14 @@
 //            }
 //            // convert the cookie putAt to the right get
 //            if (cookie != null) {
-//                response.putHeader("putAt-cookie", ServerCookieEncoder.encode(cookie));
+//                getResponse.putHeader("putAt-cookie", ServerCookieEncoder.encode(cookie));
 //            }
 //
 //            // if there is a filter then putAt the right get
 //            if (filter != null) {
 //                // verify if the filter can filter this content
-//                if (filter.canFilter(response.getHeaders().get("content-type"))) {
-//                    response.putHeader("content-encoding", filter.encoding());
+//                if (filter.canFilter(getResponse.getHeaders().get("content-type"))) {
+//                    getResponse.putHeader("content-encoding", filter.encoding());
 //                } else {
 //                    // disable the filter
 //                    filter = null;
@@ -305,8 +305,8 @@
 //            }
 //            // if there is no content and getMethod is not HEAD delete content-type, content-encoding
 //            if (!hasBody && !"HEAD".equals(getMethod)) {
-//                response.getHeaders().remove("content-encoding");
-//                response.getHeaders().remove("content-type");
+//                getResponse.getHeaders().remove("content-encoding");
+//                getResponse.getHeaders().remove("content-type");
 //            }
 //        }
 //    }
@@ -323,98 +323,98 @@
 //
 //    @Override
 //    public int getStatusCode() {
-//        return response.getStatusCode();
+//        return getResponse.getStatusCode();
 //    }
 //
 //    @Override
 //    public YokeResponse setStatusCode(int statusCode) {
-//        response.setStatusCode(statusCode);
+//        getResponse.setStatusCode(statusCode);
 //        return this;
 //    }
 //
 //    @Override
 //    public String getStatusMessage() {
-//        return response.getStatusMessage();
+//        return getResponse.getStatusMessage();
 //    }
 //
 //    @Override
 //    public YokeResponse setStatusMessage(String statusMessage) {
-//        response.setStatusMessage(statusMessage);
+//        getResponse.setStatusMessage(statusMessage);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse setChunked(boolean chunked) {
-//        response.setChunked(chunked);
+//        getResponse.setChunked(chunked);
 //        return this;
 //    }
 //
 //    @Override
 //    public boolean isChunked() {
-//        return response.isChunked();
+//        return getResponse.isChunked();
 //    }
 //
 //    @Override
 //    public MultiMap getHeaders() {
-//        return response.getHeaders();
+//        return getResponse.getHeaders();
 //    }
 //
 //    @Override
 //    public YokeResponse putHeader(String name, String value) {
-//        response.putHeader(name, value);
+//        getResponse.putHeader(name, value);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse putHeader(CharSequence name, CharSequence value) {
-//        response.putHeader(name, value);
+//        getResponse.putHeader(name, value);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse putHeader(String name, Iterable<String> values) {
-//        response.putHeader(name, values);
+//        getResponse.putHeader(name, values);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse putHeader(CharSequence name, Iterable<CharSequence> values) {
-//        response.putHeader(name, values);
+//        getResponse.putHeader(name, values);
 //        return this;
 //    }
 //
 //    @Override
 //    public MultiMap trailers() {
-//        return response.trailers();
+//        return getResponse.trailers();
 //    }
 //
 //    @Override
 //    public YokeResponse putTrailer(String name, String value) {
-//        response.putTrailer(name, value);
+//        getResponse.putTrailer(name, value);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse putTrailer(CharSequence name, CharSequence value) {
-//        response.putTrailer(name, value);
+//        getResponse.putTrailer(name, value);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse putTrailer(String name, Iterable<String> values) {
-//        response.putTrailer(name, values);
+//        getResponse.putTrailer(name, values);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse putTrailer(CharSequence name, Iterable<CharSequence> value) {
-//        response.putTrailer(name, value);
+//        getResponse.putTrailer(name, value);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeResponse closeHandler(JMXHandler<Void> engine) {
-//        response.closeHandler(engine);
+//        getResponse.closeHandler(engine);
 //        return this;
 //    }
 //
@@ -423,7 +423,7 @@
 //        hasBody = true;
 //        triggerHeadersHandlers();
 //        if (filter == null) {
-//            response.write(chunk);
+//            getResponse.write(chunk);
 //        } else {
 //            filter.write(chunk);
 //        }
@@ -432,18 +432,18 @@
 //
 //    @Override
 //    public YokeResponse setWriteQueueMaxSize(int maxSize) {
-//        response.setWriteQueueMaxSize(maxSize);
+//        getResponse.setWriteQueueMaxSize(maxSize);
 //        return this;
 //    }
 //
 //    @Override
 //    public boolean writeQueueFull() {
-//        return response.writeQueueFull();
+//        return getResponse.writeQueueFull();
 //    }
 //
 //    @Override
 //    public YokeResponse drainHandler(JMXHandler<Void> engine) {
-//        response.drainHandler(engine);
+//        getResponse.drainHandler(engine);
 //        return this;
 //    }
 //
@@ -452,7 +452,7 @@
 //        hasBody = true;
 //        triggerHeadersHandlers();
 //        if (filter == null) {
-//            response.write(chunk, enc);
+//            getResponse.write(chunk, enc);
 //        } else {
 //            filter.write(chunk, enc);
 //        }
@@ -464,7 +464,7 @@
 //        hasBody = true;
 //        triggerHeadersHandlers();
 //        if (filter == null) {
-//            response.write(chunk);
+//            getResponse.write(chunk);
 //        } else {
 //            filter.write(chunk);
 //        }
@@ -476,9 +476,9 @@
 //        hasBody = true;
 //        triggerHeadersHandlers();
 //        if (filter == null) {
-//            response.end(chunk);
+//            getResponse.end(chunk);
 //        } else {
-//            response.end(filter.end(chunk));
+//            getResponse.end(filter.end(chunk));
 //        }
 //        triggerEndHandlers();
 //    }
@@ -488,9 +488,9 @@
 //        hasBody = true;
 //        triggerHeadersHandlers();
 //        if (filter == null) {
-//            response.end(chunk, enc);
+//            getResponse.end(chunk, enc);
 //        } else {
-//            response.end(filter.end(chunk, enc));
+//            getResponse.end(filter.end(chunk, enc));
 //        }
 //        triggerEndHandlers();
 //    }
@@ -499,14 +499,14 @@
 //    public void end(@NotNull Buffer chunk) {
 //        hasBody = true;
 //        triggerHeadersHandlers();
-//        response.end(filter == null ? chunk : filter.end(chunk));
+//        getResponse.end(filter == null ? chunk : filter.end(chunk));
 //        triggerEndHandlers();
 //    }
 //
 //    @Override
 //    public void end() {
 //        triggerHeadersHandlers();
-//        response.end();
+//        getResponse.end();
 //        triggerEndHandlers();
 //    }
 //
@@ -516,7 +516,7 @@
 //        hasBody = true;
 //        filter = null;
 //        triggerHeadersHandlers();
-//        response.sendFile(filename);
+//        getResponse.sendFile(filename);
 //        triggerEndHandlers();
 //        return this;
 //    }
@@ -527,7 +527,7 @@
 //        hasBody = true;
 //        filter = null;
 //        triggerHeadersHandlers();
-//        response.sendFile(filename, notFoundFile);
+//        getResponse.sendFile(filename, notFoundFile);
 //        triggerEndHandlers();
 //        return this;
 //    }
@@ -538,7 +538,7 @@
 //        hasBody = true;
 //        filter = null;
 //        triggerHeadersHandlers();
-//        response.sendFile(filename, resultHandler);
+//        getResponse.sendFile(filename, resultHandler);
 //        triggerEndHandlers();
 //        return this;
 //    }
@@ -549,20 +549,20 @@
 //        hasBody = true;
 //        filter = null;
 //        triggerHeadersHandlers();
-//        response.sendFile(filename, notFoundFile, resultHandler);
+//        getResponse.sendFile(filename, notFoundFile, resultHandler);
 //        triggerEndHandlers();
 //        return this;
 //    }
 //
 //    @Override
 //    public void close() {
-//        response.close();
+//        getResponse.close();
 //        triggerEndHandlers();
 //    }
 //
 //    @Override
 //    public YokeResponse exceptionHandler(JMXHandler<Throwable> engine) {
-//        response.exceptionHandler(engine);
+//        getResponse.exceptionHandler(engine);
 //        return this;
 //    }
 //}

@@ -52,11 +52,11 @@
 //    }
 //
 //    @Override
-//    public void handle(@NotNull final YokeRequest request, @NotNull final Handler<Object> next) {
+//    public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next) {
 //        String token = null;
 //
-//        if ("OPTIONS".equals(request.method()) && request.getHeader("access-control-request-headers") != null) {
-//            for (String ctrlReq : request.getHeader("access-control-request-headers").split(",")) {
+//        if ("OPTIONS".equals(getRequest.method()) && getRequest.getHeader("access-control-getRequest-headers") != null) {
+//            for (String ctrlReq : getRequest.getHeader("access-control-getRequest-headers").split(",")) {
 //                if (ctrlReq.contains("authorization")) {
 //                    next.handle(null);
 //                    return;
@@ -64,12 +64,12 @@
 //            }
 //        }
 //
-//        if (skip != null && skip.contains(request.normalizedPath())) {
+//        if (skip != null && skip.contains(getRequest.normalizedPath())) {
 //            next.handle(null);
 //            return;
 //        }
 //
-//        final String authorization = request.getHeader("authorization");
+//        final String authorization = getRequest.getHeader("authorization");
 //
 //        if (authorization != null) {
 //            String[] parts = authorization.split(" ");
@@ -123,7 +123,7 @@
 //                    return;
 //                }
 //            }
-//            request.put("jwt", jwtToken);
+//            getRequest.put("jwt", jwtToken);
 //
 //            if (handler == null) {
 //                next.handle(null);

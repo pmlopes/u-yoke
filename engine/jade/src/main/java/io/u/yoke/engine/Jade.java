@@ -56,9 +56,9 @@ public class Jade implements Engine {
       final String render = jade.renderTemplate(template, ((AbstractContext) ctx).getLocals());
 
       if (ctx.get("Context-Type") == null) {
-        ctx.response().setType("text/html; charset=utf-8");
+        ctx.getResponse().setType("text/html; charset=utf-8");
       }
-      ctx.response().end(render);
+      ctx.getResponse().end(render);
 
     } catch (Exception ex) {
       ex.printStackTrace();

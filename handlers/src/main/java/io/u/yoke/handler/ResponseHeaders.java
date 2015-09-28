@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * <p>
- * A simple {@link Handler<Context>} that allows adding custom response headers to all
+ * A simple {@link Handler<Context>} that allows adding custom getResponse headers to all
  * {@link io.u.yoke.http.Response}.
  * </p>
  * <p>
@@ -42,7 +42,7 @@ public class ResponseHeaders implements Handler<Context> {
   public void handle(@NotNull final Context ctx) {
     for (final Entry<String, String[]> header : headers.entrySet()) {
       for (String value : header.getValue()) {
-        ctx.response().appendHeader(header.getKey(), value);
+        ctx.getResponse().appendHeader(header.getKey(), value);
       }
     }
 

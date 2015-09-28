@@ -24,13 +24,19 @@ public final class JettyYoke extends AbstractYoke {
       server.setHandler(new AbstractHandler() {
         @Override
         public void handle(String target, Request baseRequest, HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-          final JettyContext ctx = new JettyContext(locals, baseRequest, req, res);
+          final JettyContext ctx = new JettyContext(locals, req, res);
 
           // add x-powered-by header is enabled
           Boolean poweredBy = ctx.getAt("x-powered-by");
           if (poweredBy != null && poweredBy) {
             ctx.set("X-Powered-By", "yoke");
           }
+
+          // set async end condition
+          ctx.getResponse().endHandler(v -> {
+            // iterator is complete
+            baseRequest.setHandled(true);
+          });
 
           ctx.setIterator(handlers, getErrorHandler());
           // start the handling

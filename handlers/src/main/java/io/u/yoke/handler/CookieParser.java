@@ -15,7 +15,7 @@ import java.net.HttpCookie;
 /**
  * # CookieParser
  * <p>
- * Parse request cookie both signed or plain.
+ * Parse getRequest cookie both signed or plain.
  * <p>
  * If a cooke value starts with *s:* it means that it is a signed cookie. In this case the value is expected to be
  * *s:&lt;cookie&gt;.&lt;signature&gt;*. The signature is *HMAC + SHA256*.
@@ -48,7 +48,7 @@ public class CookieParser implements Handler<Context> {
     String cookieHeader = ctx.get("Cookie");
 
     if (cookieHeader != null) {
-      for (HttpCookie cookie : ctx.request().getCookies()) {
+      for (HttpCookie cookie : ctx.getRequest().getCookies()) {
         String value = cookie.getValue();
 
         // if the prefix is there then it is signed
@@ -65,9 +65,9 @@ public class CookieParser implements Handler<Context> {
       }
     }
 
-    // install a engine to sign response cookie
-    ctx.response().headersHandler(v -> {
-      for (HttpCookie cookie : ctx.response().getCookies()) {
+    // install a engine to sign getResponse cookie
+    ctx.getResponse().headersHandler(v -> {
+      for (HttpCookie cookie : ctx.getResponse().getCookies()) {
         cookie.setValue("s:" + Security.sign(cookie.getValue(), mac));
       }
     });

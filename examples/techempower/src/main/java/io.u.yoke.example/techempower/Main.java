@@ -121,7 +121,7 @@ public class Main {
         Collections.sort(fortunes);
 
         ctx.putAt("fortunes", fortunes);
-        ctx.response().render("fortunes");
+        ctx.getResponse().render("fortunes");
       });
     });
 

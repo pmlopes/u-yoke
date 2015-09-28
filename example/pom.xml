@@ -17,7 +17,7 @@
   <dependencies>
     <dependency>
       <groupId>io.u.yoke</groupId>
-      <artifactId>vertx</artifactId>
+      <artifactId>jetty</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -29,12 +29,18 @@
 
     <dependency>
       <groupId>io.u.yoke</groupId>
-      <artifactId>engine.handlebars</artifactId>
+      <artifactId>engine.mustache</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/js</directory>
+      </resource>
+    </resources>
+
     <plugins>
       <!-- Maven Shade Plugin -->
       <plugin>

@@ -9,7 +9,7 @@ public class X {
   public static void main(String[] args) throws IOException{
     Yoke yoke = yoke();
     yoke.use(ctx -> {
-      System.out.println(ctx.request());
+      System.out.println(ctx.getRequest());
       ctx.end("Hello!");
     });
   }

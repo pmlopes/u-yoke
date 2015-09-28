@@ -15,9 +15,9 @@
 ///**
 // * # Compress
 // *
-// * Middleware to compress responses and putAt the appropriate response headers.
+// * Middleware to compress responses and putAt the appropriate getResponse headers.
 // * Not all responses are compressed, the middleware first inspects if the
-// * request accepts compression and tries to select the best matched algorithm.
+// * getRequest accepts compression and tries to select the best matched algorithm.
 // *
 // * You can specify which content types are compressable and by default json/text/javascript
 // * are enabled.
@@ -46,12 +46,12 @@
 //    }
 //
 //    @Override
-//    public void handle(@NotNull final YokeRequest request, @NotNull final Handler<Object> next) {
-//        final String method = request.method();
-//        final YokeResponse response = request.response();
+//    public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next) {
+//        final String method = getRequest.method();
+//        final YokeResponse getResponse = getRequest.getResponse();
 //
 //        // vary
-//        response.putHeader("vary", "accept-encoding");
+//        getResponse.putHeader("vary", "accept-encoding");
 //
 //        // head requests are not compressed
 //        if ("HEAD".equals(method)) {
@@ -59,7 +59,7 @@
 //            return;
 //        }
 //
-//        final String accept = request.getHeader("accept-encoding");
+//        final String accept = getRequest.getHeader("accept-encoding");
 //
 //        // if no accept then there is no need to filter
 //        if (accept == null) {
@@ -70,12 +70,12 @@
 //        try {
 //            // default to gzip
 //            if ("*".equals(accept.trim())) {
-//                response.setFilter(new GZipWriterFilter(filter));
+//                getResponse.setFilter(new GZipWriterFilter(filter));
 //            } else {
 //                if (accept.contains("gzip")) {
-//                    response.setFilter(new GZipWriterFilter(filter));
+//                    getResponse.setFilter(new GZipWriterFilter(filter));
 //                } else if (accept.contains("deflate")) {
-//                    response.setFilter(new DeflateWriterFilter(filter));
+//                    getResponse.setFilter(new DeflateWriterFilter(filter));
 //                }
 //            }
 //            next.handle(null);

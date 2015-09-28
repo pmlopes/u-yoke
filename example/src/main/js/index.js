@@ -1,5 +1,8 @@
 // imports
 var Router = Java.type('io.u.yoke.handler.Router');
+var test = require("test.js");
+
+print(test);
 
 // main
 var router = new Router();
@@ -9,8 +12,8 @@ router.get("/user/:id", function (ctx) {
 });
 
 router.get("/user/:id", function (ctx) {
-  ctx.putAt("name", ctx.request().getParam("id"));
-  ctx.response().render("template.hbs");
+  ctx.putAt("name", ctx.request.getParam("id"));
+  ctx.response.render("template");
 });
 
 router.param("id", /gr.*/);

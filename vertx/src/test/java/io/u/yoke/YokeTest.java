@@ -86,7 +86,7 @@ public class YokeTest {
   @Test
   public void testErrorHandler() {
     app.setErrorHandler((ctx, exception) -> {
-      ctx.response()
+      ctx.getResponse()
           .setStatus(exception.getStatus());
       ctx.end("oops!");
     });

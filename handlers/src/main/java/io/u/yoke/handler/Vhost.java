@@ -20,8 +20,8 @@ public class Vhost implements Handler<Context> {
   private final Pattern regex;
 
   /**
-   * Create a new Vhost middleware. This middleware will verify the request hostname and if it matches it will send
-   * the request to the registered handler, otherwise will continue inside the middleware chain.
+   * Create a new Vhost middleware. This middleware will verify the getRequest hostname and if it matches it will send
+   * the getRequest to the registered handler, otherwise will continue inside the middleware chain.
    * <p>
    * <pre>
    * new Yoke(...)
@@ -38,7 +38,7 @@ public class Vhost implements Handler<Context> {
 
   @Override
   public void handle(@NotNull final Context ctx) {
-    String host = ctx.request().getHeader("Host");
+    String host = ctx.getRequest().getHeader("Host");
     if (host == null) {
       ctx.next();
     } else {

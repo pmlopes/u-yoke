@@ -128,12 +128,12 @@
 //  /**
 //   * Create all required header so content can be cache by Caching servers or Browsers
 //   *
-//   * @param request
+//   * @param getRequest
 //   * @param props
 //   */
-//  private void writeHeaders(final YokeRequest request, final FileProps props) {
+//  private void writeHeaders(final YokeRequest getRequest, final FileProps props) {
 //
-//    MultiMap headers = request.response().headers();
+//    MultiMap headers = getRequest.getResponse().headers();
 //
 //    if (!headers.contains("etag")) {
 //      headers.putAt("etag", "\"" + props.size() + "-" + props.lastModifiedTime().getTime() + "\"");
@@ -153,7 +153,7 @@
 //  }
 //
 //  /**
-//   * Write a file into the response body
+//   * Write a file into the getResponse body
 //   *
 //   * @param ctx
 //   * @param file
@@ -163,14 +163,14 @@
 //    // write content type
 //    String contentType = MimeType.getMime(file);
 //    String charset = MimeType.getCharset(contentType);
-//    request.response().setContentType(contentType, charset);
-//    request.response().putHeader("Content-Length", Long.toString(props.size()));
+//    getRequest.getResponse().setContentType(contentType, charset);
+//    getRequest.getResponse().putHeader("Content-Length", Long.toString(props.size()));
 //
 //    // head support
-//    if ("HEAD".equals(request.method())) {
-//      request.response().end();
+//    if ("HEAD".equals(getRequest.method())) {
+//      getRequest.getResponse().end();
 //    } else {
-//      request.response().sendFile(file);
+//      getRequest.getResponse().sendFile(file);
 //    }
 //  }
 //
@@ -190,7 +190,7 @@
 //        if (asyncResult.failed()) {
 //          next.handle(asyncResult.cause());
 //        } else {
-//          String accept = request.getHeader("accept", "text/plain");
+//          String accept = getRequest.getHeader("accept", "text/plain");
 //
 //          if (accept.contains("html")) {
 //            String normalizedDir = dir.substring(root.length());
@@ -240,9 +240,9 @@
 //              directory.append("</a>");
 //            }
 //
-//            request.response().setContentType("text/html");
-//            request.response().end(
-//                directoryTemplate.replace("{title}", (String) request.get("title")).replace("{directory}", normalizedDir)
+//            getRequest.getResponse().setContentType("text/html");
+//            getRequest.getResponse().end(
+//                directoryTemplate.replace("{title}", (String) getRequest.get("title")).replace("{directory}", normalizedDir)
 //                    .replace("{linked-path}", directory.toString())
 //                    .replace("{files}", files.toString()));
 //          } else if (accept.contains("json")) {
@@ -258,7 +258,7 @@
 //              json.addString(file);
 //            }
 //
-//            request.response().end(json);
+//            getRequest.getResponse().end(json);
 //          } else {
 //            String file;
 //            StringBuilder buffer = new StringBuilder();
@@ -273,8 +273,8 @@
 //              buffer.append('\n');
 //            }
 //
-//            request.response().setContentType("text/plain");
-//            request.response().end(buffer.toString());
+//            getRequest.getResponse().setContentType("text/plain");
+//            getRequest.getResponse().end(buffer.toString());
 //          }
 //        }
 //      }
@@ -294,13 +294,13 @@
 //    boolean notModified = true;
 //
 //    // fields
-//    String modifiedSince = request.getHeader("if-modified-since");
-//    String noneMatch = request.getHeader("if-none-match");
+//    String modifiedSince = getRequest.getHeader("if-modified-since");
+//    String noneMatch = getRequest.getHeader("if-none-match");
 //    String[] noneMatchTokens = null;
-//    String lastModified = request.response().getHeader("last-modified");
-//    String etag = request.response().getHeader("etag");
+//    String lastModified = getRequest.getResponse().getHeader("last-modified");
+//    String etag = getRequest.getResponse().getHeader("etag");
 //
-//    // unconditional request
+//    // unconditional getRequest
 //    if (modifiedSince == null && noneMatch == null) {
 //      return false;
 //    }
@@ -337,17 +337,17 @@
 //
 //  @Override
 //  public void handle(@NotNull final Context ctx) {
-//    if (!"GET".equals(request.method()) && !"HEAD".equals(request.method())) {
+//    if (!"GET".equals(getRequest.method()) && !"HEAD".equals(getRequest.method())) {
 //      ctx.next();
 //    } else {
-//      String path = request.normalizedPath();
+//      String path = getRequest.normalizedPath();
 //      // if the normalized path is null it cannot be resolved
 //      if (path == null) {
 //        ctx.fail(Status.NOT_FOUND);
 //        return;
 //      }
-//      // map file path from the request
-//      // the final path is, root + request.path excluding mount
+//      // map file path from the getRequest
+//      // the final path is, root + getRequest.path excluding mount
 //      final String file = root + path.substring(mount.length());
 //
 //      if (!includeHidden) {
@@ -376,13 +376,13 @@
 //                if (props.result().isDirectory()) {
 //                  if (directoryListing) {
 //                    // write cache control headers
-//                    writeHeaders(request, props.result());
+//                    writeHeaders(getRequest, props.result());
 //                    // verify if we are still fresh
 //                    if (isFresh(ctx)) {
-//                      request.response().setStatusCode(304);
+//                      getRequest.getResponse().setStatusCode(304);
 //                      ctx.end();
 //                    } else {
-//                      sendDirectory(request, file, next);
+//                      sendDirectory(getRequest, file, next);
 //                    }
 //                  } else {
 //                    // we are not listing directories
@@ -390,13 +390,13 @@
 //                  }
 //                } else {
 //                  // write cache control headers
-//                  writeHeaders(request, props.result());
+//                  writeHeaders(getRequest, props.result());
 //                  // verify if we are still fresh
 //                  if (isFresh(ctx)) {
-//                    request.response().setStatusCode(304);
+//                    getRequest.getResponse().setStatusCode(304);
 //                    ctx.end();
 //                  } else {
-//                    sendFile(request, file, props.result());
+//                    sendFile(getRequest, file, props.result());
 //                  }
 //                }
 //              }

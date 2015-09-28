@@ -6,17 +6,16 @@ import io.u.yoke.http.impl.AbstractResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 final class JettyResponse extends AbstractResponse {
 
-  private final org.eclipse.jetty.server.Request req;
   private final HttpServletResponse res;
 
   private boolean hasBody;
 
-  JettyResponse(JettyContext ctx, org.eclipse.jetty.server.Request req, HttpServletResponse res) {
+  JettyResponse(JettyContext ctx, HttpServletResponse res) {
     super(ctx, new JettyResponseHeaders(res));
-    this.req = req;
     this.res = res;
     hasBody = false;
   }
@@ -85,7 +84,7 @@ final class JettyResponse extends AbstractResponse {
   @Override
   public void end() {
     triggerHeadersHandlers();
-    req.setHandled(true);
+    _end();
     triggerEndHandlers();
   }
 
@@ -96,61 +95,65 @@ final class JettyResponse extends AbstractResponse {
       return;
     }
 
+    if (getHeader(CONTENT_TYPE) == null) {
+      setHeader(CONTENT_TYPE, "text/plain");
+    }
+
+    // TODO: respect character encoding header
+    byte[] data = chunk.getBytes(StandardCharsets.UTF_8);
+
+    if (getHeader(CONTENT_LENGTH) == null) {
+      setHeader(CONTENT_LENGTH, Integer.toString(data.length));
+    }
+
+    _end();
+
     hasBody = true;
     triggerHeadersHandlers();
 
     try {
-      res.getWriter().write(chunk);
-      req.setHandled(true);
+      res.getOutputStream().write(data);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
-    _end();
     triggerEndHandlers();
   }
 
   @Override
   public void binary(byte[] chunk) {
-//    if (chunk == null) {
-//      end();
-//      return;
-//    }
-//
-//    hasBody = true;
-//    triggerHeadersHandlers();
-//
-//    res.content()
-//        .writeBytes(chunk);
-//
-//    _end();
-//    triggerEndHandlers();
+    if (chunk == null) {
+      end();
+      return;
+    }
+
+    if (getHeader(CONTENT_TYPE) == null) {
+      setHeader(CONTENT_TYPE, "application/octet-stream");
+    }
+
+    if (getHeader(CONTENT_LENGTH) == null) {
+      setHeader(CONTENT_LENGTH, Integer.toString(chunk.length));
+    }
+
+    _end();
+
+    hasBody = true;
+    triggerHeadersHandlers();
+
+    try {
+      res.getOutputStream().write(chunk);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private void _end() {
+    final boolean success = res.getStatus() < 400;
+    final boolean keepAlive = success && ctx.getRequest().isKeepAlive();
 
-//    final HttpHeaders headers = res.headers();
-//
-//    if (!headers.contains(CONTENT_TYPE)) {
-//      headers.set(CONTENT_TYPE, "text/plain");
-//    }
-//
-//    if (!headers.contains(CONTENT_LENGTH)) {
-//      headers.set(CONTENT_LENGTH, res.content().readableBytes());
-//    }
-//
-//    final boolean success = res.getStatus().code() < 400;
-//    final boolean keepAlive = success && HttpHeaders.isKeepAlive(super.ctx.request().getNativeRequest());
-//
-//    if (!keepAlive) {
-//      ctx
-//          .write(res)
-//          .addListener(ChannelFutureListener.CLOSE);
-//    } else {
-//      headers.set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-//      ctx
-//          .write(res);
-//    }
+    if (keepAlive) {
+      setHeader(CONNECTION, "keep-alive");
+    }
   }
 
   @Override

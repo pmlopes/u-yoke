@@ -15,7 +15,7 @@ import java.util.Base64;
  * # BasicAuth
  * <p/>
  * Enforce basic authentication by providing a AuthCallback.engine(user, pass), which must return true in order to gain
- * access. Populates request.user. The final alternative is simply passing username / password strings.
+ * access. Populates getRequest.user. The final alternative is simply passing username / password strings.
  */
 public class BasicAuth implements Handler<Context> {
 
@@ -118,7 +118,7 @@ public class BasicAuth implements Handler<Context> {
   }
 
   /**
-   * Handle all forbidden errors, in this case we need to add a special header to the response
+   * Handle all forbidden errors, in this case we need to add a special header to the getResponse
    *
    * @param ctx yoke context
    */
@@ -174,7 +174,7 @@ public class BasicAuth implements Handler<Context> {
    * <p/>
    * The usecase is a multitenant app where I want different realms for paths like /foo/homepage and /bar/homepage.
    *
-   * @param ctx http context request
+   * @param ctx http context getRequest
    * @return realm name
    */
   public String getRealm(@NotNull Context ctx) {

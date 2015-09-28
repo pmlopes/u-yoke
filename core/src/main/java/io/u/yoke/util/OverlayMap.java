@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * Context represents the state of a request. Internally it is a Map that allows read write operations and under it
+ * Context represents the state of a getRequest. Internally it is a Map that allows read write operations and under it
  * there is the application context that only allows read operations. Adding elements to the context with the same
  * name as entries in the application context, shadows the application context entries.
  */

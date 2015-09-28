@@ -54,72 +54,72 @@
 //    }
 //
 //    @Override
-//    public void handle(@NotNull final YokeRequest request, @NotNull final Handler<Object> next)
+//    public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next)
 //    {
-//        if (isPreflightRequest(request))
+//        if (isPreflightRequest(getRequest))
 //        {
-//            handlePreflightRequest(request);
+//            handlePreflightRequest(getRequest);
 //        }
 //        else
 //        {
-//            addCorsResponseHeaders(request, request.response());
+//            addCorsResponseHeaders(getRequest, getRequest.getResponse());
 //            next.handle(null);
 //        }
 //    }
 //
-//    private boolean isPreflightRequest(final YokeRequest request)
+//    private boolean isPreflightRequest(final YokeRequest getRequest)
 //    {
-//        return OPTIONS.name().equals(request.method())
-//               && (request.getHeader(ACCESS_CONTROL_REQUEST_HEADERS) != null || request.getHeader(ACCESS_CONTROL_REQUEST_METHOD) != null);
+//        return OPTIONS.name().equals(getRequest.method())
+//               && (getRequest.getHeader(ACCESS_CONTROL_REQUEST_HEADERS) != null || getRequest.getHeader(ACCESS_CONTROL_REQUEST_METHOD) != null);
 //    }
 //
-//    private void handlePreflightRequest(final YokeRequest request)
+//    private void handlePreflightRequest(final YokeRequest getRequest)
 //    {
-//        if (isValidOrigin(request.getHeader(ORIGIN)))
+//        if (isValidOrigin(getRequest.getHeader(ORIGIN)))
 //        {
-//            addCorsResponseHeaders(request.getHeader(ORIGIN),
-//                request.response().setStatusCode(204).setStatusMessage("No Content")).end();
+//            addCorsResponseHeaders(getRequest.getHeader(ORIGIN),
+//                getRequest.getResponse().setStatusCode(204).setStatusMessage("No Content")).end();
 //        }
 //        else
 //        {
-//            request.response().setStatusCode(403).setStatusMessage("CORS Rejected").end();
+//            getRequest.getResponse().setStatusCode(403).setStatusMessage("CORS Rejected").end();
 //        }
 //    }
 //
-//    private HttpServerResponse addCorsResponseHeaders(final YokeRequest request, final YokeResponse response)
+//    private HttpServerResponse addCorsResponseHeaders(final YokeRequest getRequest, final YokeResponse getResponse)
 //    {
-//        final String origin = request.getHeader(ORIGIN);
-//        return addCorsResponseHeaders(origin, response);
+//        final String origin = getRequest.getHeader(ORIGIN);
+//        return addCorsResponseHeaders(origin, getResponse);
 //    }
 //
-//    private HttpServerResponse addCorsResponseHeaders(final String origin, final YokeResponse response)
+//    private HttpServerResponse addCorsResponseHeaders(final String origin, final YokeResponse getResponse)
 //    {
 //        if (isValidOrigin(origin))
 //        {
-//            response.putHeader(ACCESS_CONTROL_ALLOW_ORIGIN, getAllowedOrigin(origin));
+//            getResponse.putHeader(ACCESS_CONTROL_ALLOW_ORIGIN, getAllowedOrigin(origin));
 //
 //            if (!isEmpty(allowedMethods))
 //            {
-//                response.putHeader(ACCESS_CONTROL_ALLOW_METHODS, join(allowedMethods, ","));
+//                getResponse.putHeader(ACCESS_CONTROL_ALLOW_METHODS, join(allowedMethods, ","));
 //            }
 //
 //            if (!isEmpty(allowedHeaders))
 //            {
-//                response.putHeader(ACCESS_CONTROL_ALLOW_HEADERS, join(allowedHeaders, ","));
+//                getResponse.putHeader(ACCESS_CONTROL_ALLOW_HEADERS, join(allowedHeaders, ","));
 //            }
 //
 //            if (!isEmpty(exposedHeaders))
 //            {
-//                response.putHeader(ACCESS_CONTROL_EXPOSE_HEADERS, join(exposedHeaders, ","));
+//                getResponse.putHeader(ACCESS_CONTROL_EXPOSE_HEADERS, join(exposedHeaders, ","));
 //            }
 //
 //            if (allowCredentials)
 //            {
-//                response.putHeader(ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+//                getResponse.putHeader(ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 //            }
 //        }
 //
-//        return response;
+//        return getResponse;
 //    }
 //
 //    private boolean isValidOrigin(final String origin)

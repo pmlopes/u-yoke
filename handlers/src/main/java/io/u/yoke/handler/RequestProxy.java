@@ -15,7 +15,7 @@
 // * RequestProxy provides web client a simple way to interact with other REST service
 // * providers via Yoke, meanwhile Yoke could pre-handle authentication, logging and etc.
 // *
-// * In order to handler the proxy request properly, Bodyparser should be disabled for the
+// * In order to handler the proxy getRequest properly, Bodyparser should be disabled for the
 // * path matched by RequestProxy.
 // */
 //public class RequestProxy extends Middleware {
@@ -49,14 +49,14 @@
 //            client.setSSL(true);
 //        }
 //
-//        final HttpClientRequest cReq = client.request(req.method(), newUri, cRes -> {
-//          req.response().setStatusCode(cRes.statusCode());
-//          req.response().headers().putAt(cRes.headers());
-//          req.response().setChunked(true);
-//          cRes.dataHandler(data -> req.response().write(data));
+//        final HttpClientRequest cReq = client.getRequest(req.method(), newUri, cRes -> {
+//          req.getResponse().setStatusCode(cRes.statusCode());
+//          req.getResponse().headers().putAt(cRes.headers());
+//          req.getResponse().setChunked(true);
+//          cRes.dataHandler(data -> req.getResponse().write(data));
 //          cRes.endHandler(new VoidHandler() {
 //            public void handle() {
-//              req.response().end();
+//              req.getResponse().end();
 //            }
 //          });
 //          cRes.exceptionHandler(next::handle);

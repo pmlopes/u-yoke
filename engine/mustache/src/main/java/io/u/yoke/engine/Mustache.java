@@ -58,9 +58,9 @@ public class Mustache implements Engine {
       template.execute(render, ((AbstractContext) ctx).getLocals());
 
       if (ctx.get("Context-Type") == null) {
-        ctx.response().setType("text/html; charset=utf-8");
+        ctx.getResponse().setType("text/html; charset=utf-8");
       }
-      ctx.response().end(render.toString());
+      ctx.getResponse().end(render.toString());
 
     } catch (Exception ex) {
       ex.printStackTrace();

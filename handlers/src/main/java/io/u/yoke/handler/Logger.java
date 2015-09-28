@@ -16,7 +16,7 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 /**
  * # Logger
  * <p>
- * Logger for request. There are 3 formats included:
+ * Logger for getRequest. There are 3 formats included:
  * 1. DEFAULT
  * 2. SHORT
  * 3. TINY
@@ -40,7 +40,7 @@ public class Logger implements Handler<Context> {
   }
 
   /**
-   * log before request or after
+   * log before getRequest or after
    */
   private final boolean immediate;
 
@@ -70,13 +70,13 @@ public class Logger implements Handler<Context> {
         contentLength = Long.parseLong(obj.toString());
       }
     } else {
-      Object obj = ctx.response().getHeader("content-length");
+      Object obj = ctx.getResponse().getHeader("content-length");
       if (obj != null) {
         contentLength = Long.parseLong(obj.toString());
       }
     }
 
-    int status = ctx.response().getStatus().getCode();
+    int status = ctx.getResponse().getStatus().getCode();
     String message = null;
 
     switch (format) {
@@ -135,15 +135,15 @@ public class Logger implements Handler<Context> {
 
     // common logging data
     final Instant instant = Instant.now();
-    final String remoteClient = ctx.request().getIp();
-    final String method = ctx.request().getMethod().name();
-    final String uri = ctx.request().getURI();
-    final String version = ctx.request().getVersion().toString();
+    final String remoteClient = ctx.getRequest().getIp();
+    final String method = ctx.getRequest().getMethod().name();
+    final String uri = ctx.getRequest().getURI();
+    final String version = ctx.getRequest().getVersion().toString();
 
     if (immediate) {
       log(ctx, instant, remoteClient, version, method, uri);
     } else {
-      ctx.response().endHandler(event -> log(ctx, instant, remoteClient, version, method, uri));
+      ctx.getResponse().endHandler(event -> log(ctx, instant, remoteClient, version, method, uri));
     }
 
     ctx.next();

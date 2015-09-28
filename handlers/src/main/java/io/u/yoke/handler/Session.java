@@ -49,7 +49,7 @@
 //    }
 //
 //    @Override
-//    public void handle(@NotNull final YokeRequest request, @NotNull final Handler<Object> next) {
+//    public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next) {
 //        // default session
 //        final YokeCookie cookie = new YokeCookie(name, hmacSHA256);
 //        cookie.setPath(path);
@@ -57,14 +57,14 @@
 //        cookie.setMaxAge(maxAge);
 //
 //        // path validation mismatch
-//        if (request.normalizedPath().indexOf(cookie.getPath()) != 0) {
+//        if (getRequest.normalizedPath().indexOf(cookie.getPath()) != 0) {
 //            next.handle(null);
 //            return;
 //        }
 //
 //        // find the session cookie
-//        final YokeCookie sessionCookie = request.getCookie(name);
-//        final YokeResponse response = request.response();
+//        final YokeCookie sessionCookie = getRequest.getCookie(name);
+//        final YokeResponse getResponse = getRequest.getResponse();
 //
 //        int hash = 0;
 //        String unsigned = null;
@@ -81,9 +81,9 @@
 //
 //        final int originalHash = hash;
 //
-//        // call us when headers are being putAt for the response
-//        response.headersHandler(done -> {
-//          SessionObject session = request.get("session");
+//        // call us when headers are being putAt for the getResponse
+//        getResponse.headersHandler(done -> {
+//          SessionObject session = getRequest.get("session");
 //            String sessionId = session == null ? null : session.getString("id");
 //
 //            // removed
@@ -91,11 +91,11 @@
 //                if (sessionCookie != null) {
 //                    cookie.setValue("");
 //                    cookie.setMaxAge(0);
-//                    response.addCookie(cookie);
+//                    getResponse.addCookie(cookie);
 //                }
 //            } else {
 //                // only send secure cookies over https
-//                if (cookie.isSecure() && !request.isSecure()) {
+//                if (cookie.isSecure() && !getRequest.isSecure()) {
 //                    return;
 //                }
 //
@@ -104,7 +104,7 @@
 //                    // modified session
 //                    cookie.setValue(sessionId);
 //                    cookie.sign();
-//                    response.addCookie(cookie);
+//                    getResponse.addCookie(cookie);
 //                }
 //            }
 //        });
@@ -114,7 +114,7 @@
 //            return;
 //        }
 //
-//        request.loadSession(unsigned, next);
+//        getRequest.loadSession(unsigned, next);
 //    }
 //
 //    private static final int[] CRC16_TABLE = {

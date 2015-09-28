@@ -14,7 +14,7 @@ public interface Request extends Headers, Cookies, Files {
   // Holds the maximum allowed getLength for the setBody data. -1 for unlimited
   long getMaxLength();
 
-  /** Returns true if this request has setBody
+  /** Returns true if this getRequest has setBody
    *
    * @return {Boolean} true if content-getLength or transfer-encoding is present
    */
@@ -24,7 +24,7 @@ public interface Request extends Headers, Cookies, Files {
     return transferEncoding != null || contentLength != null;
   }
 
-  /** The request body */
+  /** The getRequest body */
   <V> V getBody();
 
   <V> V getJSONBody(Class<V> clazz);
@@ -33,7 +33,7 @@ public interface Request extends Headers, Cookies, Files {
     return getJSONBody(Map.class);
   }
 
-  /** Read the default locale for this request
+  /** Read the default locale for this getRequest
    *
    * @return Locale (best match if more than one)
    */
@@ -42,22 +42,22 @@ public interface Request extends Headers, Cookies, Files {
 //  String normalizedPath();
 
   /**
-   * The HTTP getVersion of the request
+   * The HTTP getVersion of the getRequest
    */
-  Version getVersion();
+  String getVersion();
 
   /**
-   * The HTTP method for the request. One of GET, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS or HEAD
+   * The HTTP method for the getRequest. One of GET, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS or HEAD
    */
   Method getMethod();
 
 //  /**
-//   * The Original HTTP method for the request. One of GET, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS or HEAD
+//   * The Original HTTP method for the getRequest. One of GET, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS or HEAD
 //   */
 //  Method getOriginalMethod();
 
   /**
-   * The normalized getURI of the request. For example
+   * The normalized getURI of the getRequest. For example
    * http://www.somedomain.com/somepath/somemorepath/someresource.foo?someparam=32&amp;someotherparam=x
    */
   String getURI();
@@ -73,12 +73,12 @@ public interface Request extends Headers, Cookies, Files {
   String getQuery();
 
   /**
-   * Returns a list of all the parameters names in the request.
+   * Returns a list of all the parameters names in the getRequest.
    */
   Iterable<String> getParams();
 
   /**
-   * Return request getParam by name.
+   * Return getRequest getParam by name.
    * <p/>
    * A getParam can be a getPath getParam, getQuery getParam or form getParam.
    *
@@ -90,14 +90,14 @@ public interface Request extends Headers, Cookies, Files {
   Iterable<String> getParamValues(@NotNull String name);
 
   /**
-   * Set request URI.
+   * Set getRequest URI.
    *
    * @param val the overridden value
    */
   void setURI(String val);
 
   /**
-   * Set request getMethod.
+   * Set getRequest getMethod.
    *
    * @param method new setMethod GET, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS or HEAD
    */
@@ -143,7 +143,7 @@ public interface Request extends Headers, Cookies, Files {
   }
 
   /**
-   * Check if the request is fresh, aka
+   * Check if the getRequest is fresh, aka
    * Last-Modified and/or the ETag
    * still match.
    *
@@ -152,7 +152,7 @@ public interface Request extends Headers, Cookies, Files {
   boolean isFresh();
 
   /**
-   * Check if the request is stale, aka
+   * Check if the getRequest is stale, aka
    * "Last-Modified" and / or the "ETag" for the
    * resource has changed.
    *
@@ -163,7 +163,7 @@ public interface Request extends Headers, Cookies, Files {
   }
 
   /**
-   * Check if the request is idempotent.
+   * Check if the getRequest is idempotent.
    *
    * @return {Boolean}
    */
@@ -344,9 +344,9 @@ public interface Request extends Headers, Cookies, Files {
   String acceptsLanguages(@NotNull String... lang);
 
   /**
-   * Check if the incoming request contains the "Content-Type"
+   * Check if the incoming getRequest contains the "Content-Type"
    * get field, and it contains the give mime `type`.
-   * If there is no request body, `false` is returned.
+   * If there is no getRequest body, `false` is returned.
    * If there is no content type, `false` is returned.
    * Otherwise, it returns true if the `type` that matches.
    * <p/>
@@ -390,7 +390,7 @@ public interface Request extends Headers, Cookies, Files {
   }
 
   /**
-   * Return the request mime type void of
+   * Return the getRequest mime type void of
    * parameters such as "getCharset".
    *
    * @return {String}
@@ -405,4 +405,18 @@ public interface Request extends Headers, Cookies, Files {
   }
 
   void setMaxLength(long limit);
+
+  default boolean isKeepAlive() {
+    final String connection = getHeader(Headers.CONNECTION);
+    if (connection != null && connection.equalsIgnoreCase("close")) {
+      return false;
+    }
+
+    // default should be KeepAlive
+    if (getVersion().equalsIgnoreCase("HTTP/1.1")) {
+      return connection != null && !connection.equalsIgnoreCase("close");
+    } else {
+      return connection != null && connection.equalsIgnoreCase("keep-alive");
+    }
+  }
 }

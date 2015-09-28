@@ -30,41 +30,41 @@
 //    }
 //
 //    @Override
-//    public void handle(@NotNull final YokeRequest request, @NotNull final Handler<Object> next) {
+//    public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next) {
 //
 //        // other methods than GET, HEAD and OPTIONS may have body
-//        if (!"GET".equals(request.method()) && !"HEAD".equals(request.method()) && !"OPTIONS".equals(request.method())) {
+//        if (!"GET".equals(getRequest.method()) && !"HEAD".equals(getRequest.method()) && !"OPTIONS".equals(getRequest.method())) {
 //            // expect multipart
-//            request.expectMultiPart(true);
+//            getRequest.expectMultiPart(true);
 //
-//            final MultiMap urlEncoded = request.formAttributes();
+//            final MultiMap urlEncoded = getRequest.formAttributes();
 //
 //            if (urlEncoded != null) {
 //                String method = urlEncoded.get(key);
 //                if (method != null) {
 //                    urlEncoded.remove(key);
-//                    request.setMethod(method);
+//                    getRequest.setMethod(method);
 //                    next.handle(null);
 //                    return;
 //                }
 //            }
 //
-//            final JsonObject json = request.body();
+//            final JsonObject json = getRequest.body();
 //            if (json != null) {
 //                String method = json.getString(key);
 //                if (method != null) {
 //                    json.removeField(key);
-//                    request.setMethod(method);
+//                    getRequest.setMethod(method);
 //                    next.handle(null);
 //                    return;
 //                }
 //            }
 //        }
 //
-//        String xHttpMethodOverride = request.getHeader("x-http-setmethod-override");
+//        String xHttpMethodOverride = getRequest.getHeader("x-http-setmethod-override");
 //
 //        if (xHttpMethodOverride != null) {
-//            request.setMethod(xHttpMethodOverride);
+//            getRequest.setMethod(xHttpMethodOverride);
 //        }
 //
 //        // if reached the end continue to the next middleware

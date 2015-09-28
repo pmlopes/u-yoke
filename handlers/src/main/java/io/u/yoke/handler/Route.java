@@ -58,7 +58,7 @@ final class Route implements Handler<Context> {
   @Override
   public void handle(Context ctx) {
     final AbstractContext abstractContext = (AbstractContext) ctx;
-    final AbstractRequest request = (AbstractRequest) ctx.request();
+    final AbstractRequest request = (AbstractRequest) ctx.getRequest();
 
     final Matcher m = pattern.matcher(ctx.getPath());
 

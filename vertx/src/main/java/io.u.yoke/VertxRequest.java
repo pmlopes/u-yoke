@@ -2,7 +2,6 @@ package io.u.yoke;
 
 import io.u.yoke.http.Method;
 import io.u.yoke.http.Status;
-import io.u.yoke.http.Version;
 import io.u.yoke.http.impl.AbstractRequest;
 import io.u.yoke.json.JSON;
 import io.vertx.core.Vertx;
@@ -19,7 +18,7 @@ final class VertxRequest extends AbstractRequest {
   private final HttpServerRequest req;
   private final Context ctx;
 
-  // override request state
+  // override getRequest state
 
   private Method method;
   private String path;
@@ -56,8 +55,8 @@ final class VertxRequest extends AbstractRequest {
   }
 
   @Override
-  public Version getVersion() {
-    return Version.valueOf(req.version().name());
+  public String getVersion() {
+    return req.version().name();
   }
 
   @Override

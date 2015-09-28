@@ -10,14 +10,14 @@ public final class Helper {
   }
 
   /**
-   * Returns the value of the "queries" request parameter, which is an integer
+   * Returns the value of the "queries" getRequest parameter, which is an integer
    * bound between 1 and 500 with a default value of 1.
    *
    * @param ctx the current HTTP exchange
-   * @return the value of the "queries" request parameter
+   * @return the value of the "queries" getRequest parameter
    */
   static int getQueries(Context ctx) {
-    String param = ctx.request().getParam("queries");
+    String param = ctx.getRequest().getParam("queries");
 
     if (param == null) {
       return 1;

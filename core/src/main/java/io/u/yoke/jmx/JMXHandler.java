@@ -85,7 +85,7 @@ public class JMXHandler<C extends Context> implements JMXHandlerMBean<C> {
   @Override
   public void handle(C ctx) {
     if (isEnabled()) {
-      if (prefix == null || ctx.request().getPath().startsWith(prefix)) {
+      if (prefix == null || ctx.getRequest().getPath().startsWith(prefix)) {
         delegate.handle(ctx);
       } else {
         ctx.next();

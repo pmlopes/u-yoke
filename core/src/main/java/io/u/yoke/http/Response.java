@@ -18,28 +18,28 @@ public interface Response extends Headers, Cookies {
   <T> T getNativeResponse();
 
   /**
-   * Get response status code.
+   * Get getResponse status code.
    *
    * @return {Number}
    */
   Status getStatus();
 
   /**
-   * Set response status code.
+   * Set getResponse status code.
    *
    * @param {Number} code
    */
   void setStatus(Status code);
 
   /**
-   * Get response status message
+   * Get getResponse status message
    *
    * @return {String}
    */
   String getMessage();
 
   /**
-   * Set response status message
+   * Set getResponse status message
    *
    * @param {String} msg
    */
@@ -53,7 +53,7 @@ public interface Response extends Headers, Cookies {
   void setLength(long n);
 
   /**
-   * Return parsed response Content-Length when present.
+   * Return parsed getResponse Content-Length when present.
    *
    * @return {Number}
    */
@@ -100,7 +100,7 @@ public interface Response extends Headers, Cookies {
   void attachment(String filename);
 
   /**
-   * void setContent-Type response get with `type` through `mime.lookup()`
+   * void setContent-Type getResponse get with `type` through `mime.lookup()`
    * when it does not contain a getCharset.
    * <p/>
    * Examples:
@@ -118,8 +118,8 @@ public interface Response extends Headers, Cookies {
   /**
    * Set the Last-Modified date using a string or a Date.
    * <p/>
-   * this.response.lastModified = new Date();
-   * this.response.lastModified = '2013-09-13';
+   * this.getResponse.lastModified = new Date();
+   * this.getResponse.lastModified = '2013-09-13';
    *
    * @param {String|Date} type
    */
@@ -130,8 +130,8 @@ public interface Response extends Headers, Cookies {
   /**
    * Set the Last-Modified date using a string or a Date.
    * <p/>
-   * this.response.lastModified = new Date();
-   * this.response.lastModified = '2013-09-13';
+   * this.getResponse.lastModified = new Date();
+   * this.getResponse.lastModified = '2013-09-13';
    *
    * @param {String|Date} type
    */
@@ -153,19 +153,19 @@ public interface Response extends Headers, Cookies {
   }
 
   /**
-   * Set the ETag of a response.
+   * Set the ETag of a getResponse.
    * This will normalize the quotes if necessary.
    * <p/>
-   * this.response.etag = 'md5hashsum';
-   * this.response.etag = '"md5hashsum"';
-   * this.response.etag = 'W/"123456789"';
+   * this.getResponse.etag = 'md5hashsum';
+   * this.getResponse.etag = '"md5hashsum"';
+   * this.getResponse.etag = 'W/"123456789"';
    *
    * @param {String} etag
    */
   void setEtag(String val);
 
   /**
-   * Get the ETag of a response.
+   * Get the ETag of a getResponse.
    *
    * @return {String}
    */
@@ -174,7 +174,7 @@ public interface Response extends Headers, Cookies {
   }
 
   /**
-   * Return the request mime type void of
+   * Return the getRequest mime type void of
    * parameters such as "getCharset".
    *
    * @return {String}
@@ -182,8 +182,8 @@ public interface Response extends Headers, Cookies {
   String getType();
 
   /**
-   * Check whether the response is one of the listed types.
-   * Pretty much the same as `this.request.is()`.
+   * Check whether the getResponse is one of the listed types.
+   * Pretty much the same as `this.getRequest.is()`.
    *
    * @param {String|Array} types...
    * @return {String|false}

@@ -3,7 +3,6 @@ package io.u.yoke;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.u.yoke.http.Method;
-import io.u.yoke.http.Version;
 import io.u.yoke.http.impl.AbstractRequest;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +15,7 @@ final class NettyRequest extends AbstractRequest {
   private final HttpRequest req;
 
   private final QueryStringDecoder decoder;
-  // override request state
+  // override getRequest state
 
   private Method method;
   private String path;
@@ -53,16 +52,8 @@ final class NettyRequest extends AbstractRequest {
   }
 
   @Override
-  public Version getVersion() {
-    switch (req.getProtocolVersion().text()) {
-      case "H2":
-        return Version.HTTP_2_0;
-      case "HTTP/1.1":
-        return Version.HTTP_1_1;
-      case "HTTP/1.0":
-      default:
-        return Version.HTTP_1_0;
-    }
+  public String getVersion() {
+    return req.getProtocolVersion().text();
   }
 
   @Override

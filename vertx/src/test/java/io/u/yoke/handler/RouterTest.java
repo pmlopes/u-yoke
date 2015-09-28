@@ -1,8 +1,6 @@
 package io.u.yoke.handler;
 
-import io.u.yoke.Context;
 import io.u.yoke.Yoke;
-import io.u.yoke.http.header.Headers;
 import io.vertx.core.json.JsonObject;
 import org.junit.*;
 
@@ -37,9 +35,9 @@ public class RouterTest {
           ctx.end("OK");
         })
         .param("userId", ctx -> {
-          assertEquals("1", ctx.request().getParam("userId"));
+          assertEquals("1", ctx.getRequest().getParam("userId"));
           // pretend that we went on some DB and got a json object representing the user
-          ctx.putAt("user", new JsonObject("{\"id\":" + ctx.request().getParam("userId") + "}"));
+          ctx.putAt("user", new JsonObject("{\"id\":" + ctx.getRequest().getParam("userId") + "}"));
           ctx.next();
         }));
 

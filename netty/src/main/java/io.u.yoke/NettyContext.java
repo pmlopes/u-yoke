@@ -24,12 +24,12 @@ public final class NettyContext extends AbstractContext {
   }
 
   @Override
-  public Request request() {
+  public Request getRequest() {
     return request;
   }
 
   @Override
-  public Response response() {
+  public Response getResponse() {
     return response;
   }
 }

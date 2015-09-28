@@ -13,20 +13,20 @@ public final class JettyContext extends AbstractContext {
   private final Request request;
   private final Response response;
 
-  public JettyContext(Map<String, Object> appLocals, org.eclipse.jetty.server.Request baseReq, HttpServletRequest req, HttpServletResponse res) {
+  public JettyContext(Map<String, Object> appLocals, HttpServletRequest req, HttpServletResponse res) {
     super(appLocals);
 
     this.request = new JettyRequest(this, req);
-    this.response = new JettyResponse(this, baseReq, res);
+    this.response = new JettyResponse(this, res);
   }
 
   @Override
-  public Request request() {
+  public Request getRequest() {
     return request;
   }
 
   @Override
-  public Response response() {
+  public Response getResponse() {
     return response;
   }
 }

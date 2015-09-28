@@ -23,7 +23,7 @@ public interface Yoke {
    * treated differently and only the last error engine is kept.
    * <p/>
    * You might want to add a engine that is only supposed to run on a specific route (path prefix).
-   * In this case if the request getPath does not match the prefix the engine is skipped automatically.
+   * In this case if the getRequest getPath does not match the prefix the engine is skipped automatically.
    * <p/>
    * <pre>
    * yoke.use(new CustomLoginMiddleware());
@@ -48,7 +48,7 @@ public interface Yoke {
 
   /**
    * When you need to share global properties with your requests you can add them
-   * to Yoke and on every request they will be available as request.get(String)
+   * to Yoke and on every getRequest they will be available as getRequest.get(String)
    *
    * @param key   unique identifier
    * @param value Any non null value, nulls are not saved

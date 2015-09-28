@@ -8,10 +8,7 @@ import io.u.yoke.example.restful.routes.users.UserCreate;
 import io.u.yoke.example.restful.routes.users.UserDelete;
 import io.u.yoke.example.restful.routes.users.UserList;
 import io.u.yoke.handler.ErrorHandler;
-import io.u.yoke.handler.Logger;
 import io.u.yoke.handler.Router;
-
-import java.io.File;
 
 public class Main {
 
@@ -29,7 +26,7 @@ public class Main {
     });
 
     yoke.use("/download", ctx -> {
-      ctx.response().sendFile("public/javascripts/global.js");
+      ctx.getResponse().sendFile("public/javascripts/global.js");
     });
 
     // setup the routes

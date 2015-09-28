@@ -95,7 +95,7 @@ public class ErrorHandler implements io.u.yoke.ErrorHandler<Context> {
         }
 
         ctx.set("Content-Type", "text/html");
-        ctx.response().end(errorTemplate.replace("{title}", ctx.getAt("title"))
+        ctx.getResponse().end(errorTemplate.replace("{title}", ctx.getAt("title"))
                 .replace("{errorCode}", Integer.toString(errorCode.getCode()))
                 .replace("{errorMessage}", exception.getMessage())
                 .replace("{stackTrace}", stackHtml.toString()));
@@ -120,7 +120,7 @@ public class ErrorHandler implements io.u.yoke.ErrorHandler<Context> {
         }
 
         ctx.set("Content-Type", "application/json; UTF-8");
-        ctx.response().json(json);
+        ctx.getResponse().json(json);
         return true;
 
       case "text/plain":
@@ -145,7 +145,7 @@ public class ErrorHandler implements io.u.yoke.ErrorHandler<Context> {
         }
 
         ctx.set("Content-Type", "text/plain; UTF-8");
-        ctx.response().end(sb.toString());
+        ctx.getResponse().end(sb.toString());
         return true;
 
       default:
@@ -161,8 +161,8 @@ public class ErrorHandler implements io.u.yoke.ErrorHandler<Context> {
       errorCode = Status.INTERNAL_SERVER_ERROR;
     }
 
-    // does the response already putAt the mime type?
-    String mime = ctx.response().getHeader("content-type");
+    // does the getResponse already putAt the mime type?
+    String mime = ctx.getResponse().getHeader("content-type");
 
     if (mime != null) {
       if (sendError(ctx, mime, exception)) {
@@ -171,7 +171,7 @@ public class ErrorHandler implements io.u.yoke.ErrorHandler<Context> {
     }
 
     // respect the client accept order
-    for (String accept : ctx.request().getSortedHeader("Accept")) {
+    for (String accept : ctx.getRequest().getSortedHeader("Accept")) {
       if (sendError(ctx, accept, exception)) {
         return;
       }

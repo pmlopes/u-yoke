@@ -37,8 +37,8 @@ public class BodyParserTest {
     app.use(new BodyParser());
     app.use(ctx -> {
 
-      assertNotNull(ctx.request().getJSONBody());
-      assertEquals("value", ctx.request().getJSONBody().get("key"));
+      assertNotNull(ctx.getRequest().getJSONBody());
+      assertEquals("value", ctx.getRequest().getJSONBody().get("key"));
       ctx.end();
     });
 
@@ -55,7 +55,7 @@ public class BodyParserTest {
 
     app.use(new BodyParser());
     app.use(ctx -> {
-      Form form = ctx.request().getBody();
+      Form form = ctx.getRequest().getBody();
       assertEquals("value", form.getParam("param"));
       ctx.end();
     });
@@ -73,7 +73,7 @@ public class BodyParserTest {
 
     app.use(new BodyParser());
     app.use(ctx -> {
-      Object body = ctx.request().getBody();
+      Object body = ctx.getRequest().getBody();
       assertEquals("hello-world", body.toString());
       ctx.end();
     });

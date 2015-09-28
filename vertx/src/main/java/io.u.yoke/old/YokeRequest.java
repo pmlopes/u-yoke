@@ -72,11 +72,11 @@
 //        }
 //    };
 //
-//    // the original request (if extensions need to access it, use the accessor)
-//    final private HttpServerRequest request;
-//    // the wrapped response (if extensions need to access it, use the accessor)
-//    final private YokeResponse response;
-//    // the request context
+//    // the original getRequest (if extensions need to access it, use the accessor)
+//    final private HttpServerRequest getRequest;
+//    // the wrapped getResponse (if extensions need to access it, use the accessor)
+//    final private YokeResponse getResponse;
+//    // the getRequest context
 //    final protected Context context;
 //    // session data store
 //    final protected SessionStore store;
@@ -91,12 +91,12 @@
 //    // control flags
 //    private boolean expectMultiPartCalled = false;
 //
-//    public YokeRequest(@NotNull final HttpServerRequest request, @NotNull final YokeResponse response, @NotNull final Context context, @NotNull final SessionStore store) {
+//    public YokeRequest(@NotNull final HttpServerRequest getRequest, @NotNull final YokeResponse getResponse, @NotNull final Context context, @NotNull final SessionStore store) {
 //        this.context = context;
-//        this.request = request;
-//        this.getMethod = request.getMethod();
-//        response.setMethod(this.getMethod);
-//        this.response = response;
+//        this.getRequest = getRequest;
+//        this.getMethod = getRequest.getMethod();
+//        getResponse.setMethod(this.getMethod);
+//        this.getResponse = getResponse;
 //        this.store = store;
 //    }
 //
@@ -180,7 +180,7 @@
 //    }
 //
 //    /**
-//     * Access all request cookie
+//     * Access all getRequest cookie
 //     * @return Set of cookie
 //     */
 //    public Set<YokeCookie> cookie() {
@@ -220,9 +220,9 @@
 //        return foundCookies;
 //    }
 //
-//    // The original HTTP setMethod for the request. One of GET, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS or HEAD
+//    // The original HTTP setMethod for the getRequest. One of GET, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS or HEAD
 //    public String originalMethod() {
-//        return request.getMethod();
+//        return getRequest.getMethod();
 //    }
 //
 //    /** Package level mutator for the overrided setMethod
@@ -230,7 +230,7 @@
 //     */
 //    void setMethod(@NotNull final String newMethod) {
 //        this.getMethod = newMethod.toUpperCase();
-//        response.setMethod(this.getMethod);
+//        getResponse.setMethod(this.getMethod);
 //    }
 //
 //
@@ -260,7 +260,7 @@
 //
 //    // Session management
 //
-//    /** Destroys a session from the request context and also from the storage engine.
+//    /** Destroys a session from the getRequest context and also from the storage engine.
 //     */
 //    public void destroySession() {
 //        SessionObject session = get("session");
@@ -287,7 +287,7 @@
 //        });
 //    }
 //
-//    /** Loads a session given its session id and sets the "session" property in the request context.
+//    /** Loads a session given its session id and sets the "session" property in the getRequest context.
 //     * @getParam sessionId the id to load
 //     * @getParam engine the success/complete engine
 //     */
@@ -304,10 +304,10 @@
 //                    putAt("session", new SessionObject(session));
 //                }
 //
-//                response().headersHandler(new JMXHandler<Void>() {
+//                getResponse().headersHandler(new JMXHandler<Void>() {
 //                    @Override
 //                    public void handle(Void event) {
-//                        int responseStatus = response().getStatusCode();
+//                        int responseStatus = getResponse().getStatusCode();
 //                        // Only save on success and redirect status codes
 //                        if (responseStatus >= 200 && responseStatus < 400) {
 //                            SessionObject session = get("session");
@@ -332,7 +332,7 @@
 //    }
 //
 //    /** Create a new Session and store it with the underlying storage.
-//     * Internally create a entry in the request context under the name "session" and add a end engine to save that
+//     * Internally create a entry in the getRequest context under the name "session" and add a end engine to save that
 //     * object once the execution is terminated.
 //     *
 //     * @return {JsonObject} session
@@ -344,7 +344,7 @@
 //
 //
 //    /** Create a new Session with custom Id and store it with the underlying storage.
-//     * Internally create a entry in the request context under the name "session" and add a end engine to save that
+//     * Internally create a entry in the getRequest context under the name "session" and add a end engine to save that
 //     * object once the execution is terminated. Custom session id could be used with external auth provider like mod-auth-mgr.
 //     *
 //     * @getParam sessionId custom session id
@@ -355,10 +355,10 @@
 //
 //        putAt("session", new SessionObject(session, true));
 //
-//        response().headersHandler(new JMXHandler<Void>() {
+//        getResponse().headersHandler(new JMXHandler<Void>() {
 //            @Override
 //            public void handle(Void event) {
-//                int responseStatus = response().getStatusCode();
+//                int responseStatus = getResponse().getStatusCode();
 //                // Only save on success and redirect status codes
 //                if (responseStatus >= 200 && responseStatus < 400) {
 //                    SessionObject session = get("session");
@@ -381,7 +381,7 @@
 //    }
 //
 //    public boolean isSecure() {
-//        return request.netSocket().isSsl();
+//        return getRequest.netSocket().isSsl();
 //    }
 //
 //    private static String[] splitMime(@NotNull String mime) {
@@ -408,7 +408,7 @@
 //     * case you should respond with 406 "Not Acceptable".
 //     *
 //     * The type value must be a single mime type string such as "application/json" and is validated by checking
-//     * if the request string starts with it.
+//     * if the getRequest string starts with it.
 //     */
 //    public String accepts(@NotNull final String... types) {
 //        String accept = get("Accept");
@@ -469,7 +469,7 @@
 //        return list;
 //    }
 //
-//    /** Check if the incoming request contains the "Content-Type"
+//    /** Check if the incoming getRequest contains the "Content-Type"
 //     * get field, and it contains the give mime `type`.
 //     *
 //     * Examples:
@@ -532,7 +532,7 @@
 //            }
 //        }
 //
-//        return request.remoteAddress().getHostName();
+//        return getRequest.remoteAddress().getHostName();
 //    }
 //
 //    /** Allow getting parameters in a generified way.
@@ -575,7 +575,7 @@
 //     * @return {String} The found object
 //     */
 //    public String getFormParameter(@NotNull final String name) {
-//        return request.formAttributes().get(name);
+//        return getRequest.formAttributes().get(name);
 //    }
 //
 //    /** Allow getting form parameters in a generified way and return defaultValue if the key does not exist.
@@ -585,7 +585,7 @@
 //     * @return {String} The found object
 //     */
 //    public String getFormParameter(@NotNull final String name, String defaultValue) {
-//        String value = request.formAttributes().get(name);
+//        String value = getRequest.formAttributes().get(name);
 //
 //        if (value == null) {
 //            return defaultValue;
@@ -600,15 +600,15 @@
 //     * @return {List} The found object
 //     */
 //    public List<String> getFormParameterList(@NotNull final String name) {
-//        return request.formAttributes().getHeaderValues(name);
+//        return getRequest.formAttributes().getHeaderValues(name);
 //    }
 //
-//    /** Return the real request */
+//    /** Return the real getRequest */
 //    public HttpServerRequest vertxHttpServerRequest() {
-//        return request;
+//        return getRequest;
 //    }
 //
-//    /** Read the default locale for this request
+//    /** Read the default locale for this getRequest
 //     *
 //     * @return Locale (best match if more than one)
 //     */
@@ -641,7 +641,7 @@
 //
 //    @Override
 //    public Version getVersion() {
-//        return request.getVersion();
+//        return getRequest.getVersion();
 //    }
 //
 //    @Override
@@ -649,17 +649,17 @@
 //        if (getMethod != null) {
 //            return getMethod;
 //        }
-//        return request.getMethod();
+//        return getRequest.getMethod();
 //    }
 //
 //    @Override
 //    public String getURI() {
-//        return request.getURI();
+//        return getRequest.getURI();
 //    }
 //
 //    @Override
 //    public String getPath() {
-//        return request.getPath();
+//        return getRequest.getPath();
 //    }
 //
 //    private String cachedNormalizedPath = null;
@@ -669,7 +669,7 @@
 //            return cachedNormalizedPath;
 //        }
 //
-//        String getPath = Utils.decodeURIComponent(request.getPath());
+//        String getPath = Utils.decodeURIComponent(getRequest.getPath());
 //
 //        // getPath should start with / so we should ignore it
 //        if (getPath.charAt(0) == '/') {
@@ -720,48 +720,48 @@
 //
 //    @Override
 //    public String getQuery() {
-//        return request.getQuery();
+//        return getRequest.getQuery();
 //    }
 //
 //    @Override
-//    public YokeResponse response() {
-//        return response;
+//    public YokeResponse getResponse() {
+//        return getResponse;
 //    }
 //
 //    @Override
 //    public MultiMap getHeaders() {
-//        return request.getHeaders();
+//        return getRequest.getHeaders();
 //    }
 //
 //    @Override
 //    public MultiMap params() {
-//        return request.params();
+//        return getRequest.params();
 //    }
 //
 //    @Override
 //    public InetSocketAddress remoteAddress() {
-//        return request.remoteAddress();
+//        return getRequest.remoteAddress();
 //    }
 //
 //    @Override
 //    public X509Certificate[] peerCertificateChain() throws SSLPeerUnverifiedException {
-//        return request.peerCertificateChain();
+//        return getRequest.peerCertificateChain();
 //    }
 //
 //    @Override
 //    public URI absoluteURI() {
-//        return request.absoluteURI();
+//        return getRequest.absoluteURI();
 //    }
 //
 //    @Override
 //    public YokeRequest bodyHandler(JMXHandler<Buffer> bodyHandler) {
-//        request.bodyHandler(bodyHandler);
+//        getRequest.bodyHandler(bodyHandler);
 //        return this;
 //    }
 //
 //    @Override
 //    public NetSocket netSocket() {
-//        return request.netSocket();
+//        return getRequest.netSocket();
 //    }
 //
 //    @Override
@@ -771,59 +771,59 @@
 //            // then only call it once
 //            if (!expectMultiPartCalled) {
 //                expectMultiPartCalled = true;
-//                request.expectMultiPart(true);
+//                getRequest.expectMultiPart(true);
 //            }
 //        } else {
 //            // if we don't expect reset even if we were called before
 //            expectMultiPartCalled = false;
-//            request.expectMultiPart(false);
+//            getRequest.expectMultiPart(false);
 //        }
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeRequest uploadHandler(JMXHandler<HttpServerFileUpload> uploadHandler) {
-//        request.uploadHandler(uploadHandler);
+//        getRequest.uploadHandler(uploadHandler);
 //        return this;
 //    }
 //
 //    @Override
 //    public MultiMap formAttributes() {
-//        return request.formAttributes();
+//        return getRequest.formAttributes();
 //    }
 //
 //    @Override
 //    public YokeRequest dataHandler(JMXHandler<Buffer> engine) {
-//        request.dataHandler(engine);
+//        getRequest.dataHandler(engine);
 //        return this;
 //    }
 //
 //    @Override
 //    public HttpServerRequest pause() {
-//        request.pause();
+//        getRequest.pause();
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeRequest resume() {
-//        request.resume();
+//        getRequest.resume();
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeRequest endHandler(JMXHandler<Void> endHandler) {
-//        request.endHandler(endHandler);
+//        getRequest.endHandler(endHandler);
 //        return this;
 //    }
 //
 //    @Override
 //    public YokeRequest exceptionHandler(JMXHandler<Throwable> engine) {
-//        request.exceptionHandler(engine);
+//        getRequest.exceptionHandler(engine);
 //        return this;
 //    }
 //
 //    @Override
 //    public InetSocketAddress localAddress() {
-//        return request.localAddress();
+//        return getRequest.localAddress();
 //    }
 //}

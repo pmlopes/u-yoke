@@ -341,12 +341,12 @@ public interface Headers {
   }
 
   /**
-   * Returns all get names for this request.
+   * Returns all get names for this getRequest.
    */
   Iterable<String> getHeaders();
 
   /**
-   * Return request get.
+   * Return getRequest get.
    * <p>
    * The `Referrer` get field is special-cased,
    * both `Referrer` and `Referer` are interchangeable.

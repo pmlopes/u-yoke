@@ -32,7 +32,7 @@ public final class UndertowYoke extends AbstractYoke {
     final HttpHandler yokeHandler = new HttpHandler() {
       @Override
       public void handleRequest(HttpServerExchange exchange) throws Exception {
-//        // dispatch the request to a worker thread
+//        // dispatch the getRequest to a worker thread
 //        if (exchange.isInIoThread()) {
           exchange.dispatch();
 //          return;

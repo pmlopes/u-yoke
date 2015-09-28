@@ -58,46 +58,46 @@
 //    }
 //
 //    @Override
-//    public void handle(@NotNull final YokeRequest request, @NotNull final Handler<Object> next) {
-//        if (request.path().equals(loginURI)) {
-//            if ("GET".equals(request.method())) {
+//    public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next) {
+//        if (getRequest.path().equals(loginURI)) {
+//            if ("GET".equals(getRequest.method())) {
 //                if (loginTemplate != null) {
 //                    // render internal login
-//                    request.response().setContentType("text/html");
-//                    request.response().end(
-//                            loginTemplate.replace("{title}", request.get("title"))
-//                                    .replace("{action}", loginURI + "?redirect_url=" + Utils.encodeURIComponent(request.getParameter("redirect_url", "/")))
+//                    getRequest.getResponse().setContentType("text/html");
+//                    getRequest.getResponse().end(
+//                            loginTemplate.replace("{title}", getRequest.get("title"))
+//                                    .replace("{action}", loginURI + "?redirect_url=" + Utils.encodeURIComponent(getRequest.getParameter("redirect_url", "/")))
 //                                    .replace("{message}", ""));
 //                } else {
 //                    // render login
-//                    request.response().render(userLoginTemplate, next);
+//                    getRequest.getResponse().render(userLoginTemplate, next);
 //                }
 //                return;
 //            }
 //
-//            if ("POST".equals(request.method())) {
-//                if (forceSSL && !request.isSecure()) {
+//            if ("POST".equals(getRequest.method())) {
+//                if (forceSSL && !getRequest.isSecure()) {
 //                    // SSL is required but the post is insecure
 //                    next.handle(400);
 //                    return;
 //                }
 //
-//                authHandler.handle(request.getFormParameter("username"), request.getFormParameter("password"), user -> {
+//                authHandler.handle(getRequest.getFormParameter("username"), getRequest.getFormParameter("password"), user -> {
 //                    if (user != null) {
-//                        JsonObject session = request.createSession();
-//                        session.putString("user", request.getFormParameter("username"));
+//                        JsonObject session = getRequest.createSession();
+//                        session.putString("user", getRequest.getFormParameter("username"));
 //
 //                        // get the redirect_url parameter
-//                        String redirect = request.getParameter("redirect_url", "/");
-//                        request.response().redirect(Utils.decodeURIComponent(redirect));
+//                        String redirect = getRequest.getParameter("redirect_url", "/");
+//                        getRequest.getResponse().redirect(Utils.decodeURIComponent(redirect));
 //                    } else {
 //                        if (loginTemplate != null) {
 //                            // render internal login
-//                            request.response().setContentType("text/html");
-//                            request.response().setStatusCode(401);
-//                            request.response().end(
-//                                    loginTemplate.replace("{title}", request.get("title"))
-//                                            .replace("{action}", loginURI + "?redirect_url=" + Utils.encodeURIComponent(request.getParameter("redirect_url", "/")))
+//                            getRequest.getResponse().setContentType("text/html");
+//                            getRequest.getResponse().setStatusCode(401);
+//                            getRequest.getResponse().end(
+//                                    loginTemplate.replace("{title}", getRequest.get("title"))
+//                                            .replace("{action}", loginURI + "?redirect_url=" + Utils.encodeURIComponent(getRequest.getParameter("redirect_url", "/")))
 //                                            .replace("{message}", "Invalid username and/or password, please try again."));
 //                        } else {
 //                            next.handle(401);
@@ -109,13 +109,13 @@
 //            }
 //        }
 //
-//        if (request.path().equals(logoutURI)) {
-//            if ("GET".equals(request.method())) {
+//        if (getRequest.path().equals(logoutURI)) {
+//            if ("GET".equals(getRequest.method())) {
 //                // remove session from storage
-//                request.destroySession();
+//                getRequest.destroySession();
 //                // get the redirect_url parameter
-//                String redirect = request.getParameter("redirect_url", "/");
-//                request.response().redirect(Utils.decodeURIComponent(redirect));
+//                String redirect = getRequest.getParameter("redirect_url", "/");
+//                getRequest.getResponse().redirect(Utils.decodeURIComponent(redirect));
 //                return;
 //            }
 //        }
@@ -126,8 +126,8 @@
 //
 //    public final Middleware RequiredAuth = new Middleware() {
 //        @Override
-//        public void handle(@NotNull final YokeRequest request, @NotNull final Handler<Object> next) {
-//        	SessionObject session = request.get("session");
+//        public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next) {
+//        	SessionObject session = getRequest.get("session");
 //
 //            if (session != null) {
 //                if (session.getString("id") != null) {
@@ -136,8 +136,8 @@
 //                }
 //            }
 //
-//            String redirect = request.getParameter("redirect_url", Utils.encodeURIComponent(request.uri()));
-//            request.response().redirect(loginURI + "?redirect_url=" + Utils.decodeURIComponent(redirect));
+//            String redirect = getRequest.getParameter("redirect_url", Utils.encodeURIComponent(getRequest.uri()));
+//            getRequest.getResponse().redirect(loginURI + "?redirect_url=" + Utils.decodeURIComponent(redirect));
 //        }
 //    };
 //}

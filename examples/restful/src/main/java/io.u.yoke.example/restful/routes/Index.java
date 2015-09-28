@@ -8,6 +8,6 @@ public class Index implements Handler<Context> {
   public void handle(Context ctx) {
     ctx.putAt("title", "Yoke 3");
 
-    ctx.response().render("index");
+    ctx.getResponse().render("index");
   }
 }

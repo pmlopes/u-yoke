@@ -168,14 +168,14 @@ public abstract class AbstractResponse extends CommonImpl implements Response {
       }
 //      // convert the cookie putAt to the right get
 //      if (cookie != null) {
-//        response.putHeader("putAt-cookie", ServerCookieEncoder.encode(cookie));
+//        getResponse.putHeader("putAt-cookie", ServerCookieEncoder.encode(cookie));
 //      }
 
 //      // if there is a filter then putAt the right get
 //      if (filter != null) {
 //        // verify if the filter can filter this content
-//        if (filter.canFilter(response.getHeaders().get("content-type"))) {
-//          response.putHeader("content-encoding", filter.encoding());
+//        if (filter.canFilter(getResponse.getHeaders().get("content-type"))) {
+//          getResponse.putHeader("content-encoding", filter.encoding());
 //        } else {
 //          // disable the filter
 //          filter = null;
@@ -183,7 +183,7 @@ public abstract class AbstractResponse extends CommonImpl implements Response {
 //      }
 
       // if there is no content and method is not HEAD delete content-type, content-encoding
-      if (!hasBody() && ctx.request().getMethod() != Method.HEAD) {
+      if (!hasBody() && ctx.getRequest().getMethod() != Method.HEAD) {
         removeHeader("Content-Encoding");
         removeHeader("Content-Type");
       }

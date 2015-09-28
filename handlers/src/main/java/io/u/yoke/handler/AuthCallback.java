@@ -13,7 +13,7 @@ import io.u.yoke.Callback;
 @FunctionalInterface
 public interface AuthCallback {
   /**
-   * Handles a challenge authentication request and asynchronously returns the user object on success, null for error.
+   * Handles a challenge authentication getRequest and asynchronously returns the user object on success, null for error.
    *
    * @param username  the security principal user name
    * @param password  the security principal password

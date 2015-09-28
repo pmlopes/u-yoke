@@ -15,8 +15,8 @@ public final class DefaultErrorHandler implements ErrorHandler<Context> {
       errorCode = Status.INTERNAL_SERVER_ERROR;
     }
 
-    ctx.response().setStatus(errorCode);
-    ctx.response().setMessage(exception.getMessage());
-    ctx.response().end(exception.getMessage());
+    ctx.getResponse().setStatus(errorCode);
+    ctx.getResponse().setMessage(exception.getMessage());
+    ctx.getResponse().end(exception.getMessage());
   }
 }

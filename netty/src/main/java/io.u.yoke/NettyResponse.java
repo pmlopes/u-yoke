@@ -9,9 +9,6 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.u.yoke.http.Status;
 import io.u.yoke.http.impl.AbstractResponse;
 
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-
 final class NettyResponse extends AbstractResponse {
 
   private final FullHttpResponse res;
@@ -142,7 +139,7 @@ final class NettyResponse extends AbstractResponse {
     }
 
     final boolean success = res.getStatus().code() < 400;
-    final boolean keepAlive = success && HttpHeaders.isKeepAlive(super.ctx.request().getNativeRequest());
+    final boolean keepAlive = success && HttpHeaders.isKeepAlive(super.ctx.getRequest().getNativeRequest());
 
     if (!keepAlive) {
       ctx

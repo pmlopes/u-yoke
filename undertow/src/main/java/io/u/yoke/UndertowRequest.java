@@ -1,7 +1,6 @@
 package io.u.yoke;
 
 import io.u.yoke.http.Method;
-import io.u.yoke.http.Version;
 import io.u.yoke.http.impl.AbstractRequest;
 import io.undertow.server.HttpServerExchange;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +12,7 @@ public class UndertowRequest extends AbstractRequest {
 
   private final HttpServerExchange exchange;
 
-  // override request state
+  // override getRequest state
 
   private Method method;
   private String path;
@@ -55,9 +54,8 @@ public class UndertowRequest extends AbstractRequest {
   }
 
   @Override
-  public Version getVersion() {
-    System.out.println(exchange.getConnection().getTransportProtocol());
-    return Version.valueOf(exchange.getConnection().getTransportProtocol());
+  public String getVersion() {
+    return exchange.getConnection().getTransportProtocol();
   }
 
   @Override

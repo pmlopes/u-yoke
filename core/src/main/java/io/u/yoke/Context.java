@@ -11,9 +11,9 @@ import java.time.Instant;
 
 public interface Context {
 
-  Request request();
+  Request getRequest();
 
-  Response response();
+  Response getResponse();
 
   /**
    * Allow getting properties in a generified way.
@@ -71,83 +71,83 @@ public interface Context {
    */
 
   default void attachment(String filename) {
-    response().attachment(filename);
+    getResponse().attachment(filename);
   }
 
   default void redirect(String url, String alt) {
-    response().redirect(url, alt);
+    getResponse().redirect(url, alt);
   }
 
   default void remove(String field) {
-    response().removeHeader(field);
+    getResponse().removeHeader(field);
   }
 
   default void vary(String field) {
-    response().vary(field);
+    getResponse().vary(field);
   }
 
   default void set(String field, String val) {
-    response().setHeader(field, val);
+    getResponse().setHeader(field, val);
   }
 
   default void append(String field, String val) {
-    response().appendHeader(field, val);
+    getResponse().appendHeader(field, val);
   }
 
   default void setStatus(Status code) {
-    response().setStatus(code);
+    getResponse().setStatus(code);
   }
 
   default void setMessage(String msg) {
-    response().setMessage(msg);
+    getResponse().setMessage(msg);
   }
 
   default void end(String chunk) {
-    response().end(chunk);
+    getResponse().end(chunk);
   }
 
   default void binary(byte[] chunk) {
-    response().binary(chunk);
+    getResponse().binary(chunk);
   }
 
   default void end() {
-    response().end();
+    getResponse().end();
   }
 
   default void json(Object bean) {
-    response().json(bean);
+    getResponse().json(bean);
   }
 
   default void setLength(long n) {
-    response().setLength(n);
+    getResponse().setLength(n);
   }
 
   default void setType(String type) {
-    response().setType(type);
+    getResponse().setType(type);
   }
 
   default void setLastModified(Instant val) {
-    response().setLastModified(val);
+    getResponse().setLastModified(val);
   }
 
   default void setLastModified(String val) {
-    response().setLastModified(val);
+    getResponse().setLastModified(val);
   }
 
   default void setEtag(String val) {
-    response().setEtag(val);
+    getResponse().setEtag(val);
   }
 
   default boolean isHeaderSent() {
-    return response().isHeaderSent();
+    return getResponse().isHeaderSent();
   }
 
   default void addCookie(HttpCookie cookie) {
-    response().addCookie(cookie);
+    getResponse().addCookie(cookie);
   }
 
   default void removeCookie(String name) {
-    response().removeCookie(name);
+    getResponse().removeCookie(name);
   }
 
   /**
@@ -155,98 +155,98 @@ public interface Context {
    */
 
   default String acceptsLanguages(@NotNull String... lang) {
-    return request().acceptsLanguages(lang);
+    return getRequest().acceptsLanguages(lang);
   }
 
   default String acceptsEncodings(@NotNull String... encoding) {
-    return request().acceptsEncodings(encoding);
+    return getRequest().acceptsEncodings(encoding);
   }
 
   default String acceptsCharsets(@NotNull String... charset) {
-    return request().acceptsCharsets(charset);
+    return getRequest().acceptsCharsets(charset);
   }
 
   default String accepts(@NotNull String... type) {
-    return request().accepts(type);
+    return getRequest().accepts(type);
   }
 
   default String get(@NotNull String name) {
-    return request().getHeader(name);
+    return getRequest().getHeader(name);
   }
 
   default boolean is(@NotNull String type) {
-    return request().is(type);
+    return getRequest().is(type);
   }
 
   default void setMethod(@NotNull Method method) {
-    request().setMethod(method);
+    getRequest().setMethod(method);
   }
 
   default void setPath(String path) {
-    request().setPath(path);
+    getRequest().setPath(path);
   }
 
   default void setQuery(String obj) {
-    request().setQuery(obj);
+    getRequest().setQuery(obj);
   }
 
   default void setURI(String val) {
-    request().setURI(val);
+    getRequest().setURI(val);
   }
 
   default boolean isIdempotent() {
-    return request().isIdempotent();
+    return getRequest().isIdempotent();
   }
 
   default Iterable<String> getSubdomains() {
-    return request().getSubdomains();
+    return getRequest().getSubdomains();
   }
 
   default String getProtocol() {
-    return request().getProtocol();
+    return getRequest().getProtocol();
   }
 
   default String getPath() {
-    return request().getPath();
+    return getRequest().getPath();
   }
 
   default String getHost() {
-    return request().getHost();
+    return getRequest().getHost();
   }
 
   default String getHostname() {
-    return request().getHostname();
+    return getRequest().getHostname();
   }
 
   default Iterable<String> getHeaders() {
-    return request().getHeaders();
+    return getRequest().getHeaders();
   }
 
   default boolean isSecure() {
-    return request().isSecure();
+    return getRequest().isSecure();
   }
 
   default boolean isStale() {
-    return request().isStale();
+    return getRequest().isStale();
   }
 
   default boolean isFresh() {
-    return request().isFresh();
+    return getRequest().isFresh();
   }
 
   default Iterable<String> getIps() {
-    return request().getIps();
+    return getRequest().getIps();
   }
 
   default String getIp() {
-    return request().getIp();
+    return getRequest().getIp();
   }
 
   default Iterable<HttpCookie> getCookies() {
-    return request().getCookies();
+    return getRequest().getCookies();
   }
 
   default HttpCookie getCookie(@NotNull String name) {
-    return request().getCookie(name);
+    return getRequest().getCookie(name);
   }
 }

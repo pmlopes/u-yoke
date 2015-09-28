@@ -21,7 +21,7 @@ public abstract class AbstractRequest extends CommonImpl implements Request {
       Method.TRACE
   ));
 
-  private final Context ctx;
+  protected final Context ctx;
 
   private Map<String, File> files;
   private long maxLength = -1;
@@ -42,6 +42,14 @@ public abstract class AbstractRequest extends CommonImpl implements Request {
   @Override
   public File getFile(@NotNull String name) {
     return files.get(name);
+  }
+
+  public void putFile(@NotNull String name, @NotNull File file) {
+    if (files == null) {
+      files = new LinkedHashMap<>();
+    }
+
+    files.put(name, file);
   }
 
   @Override
@@ -231,7 +239,7 @@ public abstract class AbstractRequest extends CommonImpl implements Request {
     final int s = 200; //ctx.getStatus();
     // 2xx or 304 as per rfc2616 14.26
     if ((s >= 200 && s < 300) || 304 == s) {
-      //return fresh(this.header, this.ctx.response.header);
+      //return fresh(this.header, this.ctx.getResponse.header);
     }
 
     return false;

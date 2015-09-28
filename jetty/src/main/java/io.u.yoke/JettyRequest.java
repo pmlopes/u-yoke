@@ -1,11 +1,13 @@
 package io.u.yoke;
 
 import io.u.yoke.http.Method;
-import io.u.yoke.http.Version;
+import io.u.yoke.http.Status;
 import io.u.yoke.http.impl.AbstractRequest;
+import io.u.yoke.json.JSON;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 
 final class JettyRequest extends AbstractRequest {
@@ -18,6 +20,8 @@ final class JettyRequest extends AbstractRequest {
   private String path;
   private String query;
   private String uri;
+
+  private Map<String, String[]> parameters;
 
   JettyRequest(JettyContext ctx, HttpServletRequest req) {
     super(ctx, new JettyRequestHeaders(req));
@@ -36,26 +40,17 @@ final class JettyRequest extends AbstractRequest {
       return null;
     }
 
-//    try {
-//      return JSON.decode(((Buffer) getBody()).getBytes(), clazz);
-//    } catch (IOException | RuntimeException e) {
-//      ctx.fail(Status.BAD_REQUEST);
-//      return null;
-//    }
-    return null;
+    try {
+      return JSON.decode(((byte[]) getBody()), clazz);
+    } catch (IOException | RuntimeException e) {
+      ctx.fail(Status.BAD_REQUEST);
+      return null;
+    }
   }
 
   @Override
-  public Version getVersion() {
-    switch (req.getProtocol()) {
-      case "HTTP/2.0":
-        return Version.HTTP_2_0;
-      case "HTTP/1.1":
-        return Version.HTTP_1_1;
-      case "HTTP/1.0":
-      default:
-        return Version.HTTP_1_0;
-    }
+  public String getVersion() {
+    return req.getProtocol();
   }
 
   @Override
@@ -94,40 +89,44 @@ final class JettyRequest extends AbstractRequest {
 
   @Override
   public Iterable<String> getParams() {
-    return () -> new Iterator<String>() {
-      private final Enumeration<String> enumeration = req.getAttributeNames();
+    if (parameters == null) {
+      parameters = new LinkedHashMap<>(req.getParameterMap());
+    }
 
-      @Override
-      public boolean hasNext() {
-        return enumeration.hasMoreElements();
-      }
-
-      @Override
-      public String next() {
-        return enumeration.nextElement();
-      }
-    };
+    return parameters.keySet();
   }
 
   @Override
   public String getParam(@NotNull final String name) {
-    return req.getParameter(name);
+    if (parameters == null) {
+      parameters = new LinkedHashMap<>(req.getParameterMap());
+    }
+
+    String[] values = parameters.get(name);
+
+    if (values != null && values.length > 0) {
+      return values[0];
+    }
+
+    return null;
   }
 
   @Override
   public void setParam(@NotNull final String name, final String value) {
-//    if (parameters == null) {
-//      parameters = decoder.parameters();
-//    }
-//
-//    List<String> parameter = parameters.get(name);
-//
-//    if (parameter == null) {
-//      parameter = new LinkedList<>();
-//      parameters.put(name, parameter);
-//    }
-//
-//    parameter.add(value);
+    if (parameters == null) {
+      parameters = new LinkedHashMap<>(req.getParameterMap());
+    }
+
+    String[] values = parameters.get(name);
+
+    if (values == null) {
+      parameters.put(name, new String[] { value });
+    } else {
+      String[] _values = new String[values.length + 1];
+      System.arraycopy(values, 0, _values, 0, values.length);
+      _values[values.length] = value;
+      parameters.put(name, _values);
+    }
   }
 
   @Override
@@ -157,13 +156,11 @@ final class JettyRequest extends AbstractRequest {
 
   @Override
   protected boolean isSSL() {
-//    return req.netSocket().isSsl();
-    return false;
+    return req.isSecure();
   }
 
   @Override
   protected String getRemoteAddress() {
-//    return req.remoteAddress().toString();
-    return null;
+    return req.getRemoteAddr();
   }
 }
