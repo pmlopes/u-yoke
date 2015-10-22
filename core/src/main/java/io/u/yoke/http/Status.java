@@ -1,6 +1,6 @@
 package io.u.yoke.http;
 
-import java.util.IdentityHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public enum Status {
@@ -126,7 +126,7 @@ public enum Status {
   private static final Map<Integer, Status> LOOKUP;
 
   static {
-    LOOKUP = new IdentityHashMap<>();
+    LOOKUP = new HashMap<>();
 
     for (Status status : Status.values()) {
       LOOKUP.put(status.code, status);

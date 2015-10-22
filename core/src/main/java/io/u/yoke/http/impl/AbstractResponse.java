@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import static io.u.yoke.http.Status.*;
 
-public abstract class AbstractResponse extends CommonImpl implements Response {
+public abstract class AbstractResponse extends Common implements Response {
 
   private static final Map<String, Engine> ENGINE = new HashMap<>();
   private static final String DEFAULT_ENGINE;
@@ -53,12 +53,10 @@ public abstract class AbstractResponse extends CommonImpl implements Response {
 
   protected final Context ctx;
 
-  private List<HttpCookie> cookies;
-
   // extra handlers
-  private List<Handler<Void>> headersHandler;
+  private Deque<Handler<Void>> headersHandler;
   private boolean headersHandlerTriggered;
-  private List<Handler<Void>> endHandler;
+  private Deque<Handler<Void>> endHandler;
 
   public AbstractResponse(@NotNull final Context ctx, @NotNull final Headers headers) {
     super(headers);
@@ -143,18 +141,18 @@ public abstract class AbstractResponse extends CommonImpl implements Response {
   public void headersHandler(Handler<Void> handler) {
     if (!headersHandlerTriggered) {
       if (headersHandler == null) {
-        headersHandler = new ArrayList<>();
+        headersHandler = new LinkedList<>();
       }
-      headersHandler.add(handler);
+      headersHandler.push(handler);
     }
   }
 
   @Override
   public void endHandler(Handler<Void> handler) {
     if (endHandler == null) {
-      endHandler = new ArrayList<>();
+      endHandler = new LinkedList<>();
     }
-    endHandler.add(handler);
+    endHandler.push(handler);
   }
 
   protected void triggerHeadersHandlers() {
@@ -162,14 +160,16 @@ public abstract class AbstractResponse extends CommonImpl implements Response {
       headersHandlerTriggered = true;
       // if there are handlers call them
       if (headersHandler != null) {
-        for (Handler<Void> handler : headersHandler) {
+        Handler<Void> handler;
+        while ((handler = headersHandler.pollFirst()) != null) {
           handler.handle(null);
         }
       }
-//      // convert the cookie putAt to the right get
-//      if (cookie != null) {
-//        getResponse.putHeader("putAt-cookie", ServerCookieEncoder.encode(cookie));
-//      }
+
+      // convert the cookie putAt to the right get
+      for (HttpCookie cookie : getCookies()) {
+        ctx.set(Headers.SET_COOKIE, ServerCookieEncoder.encode(cookie));
+      }
 
 //      // if there is a filter then putAt the right get
 //      if (filter != null) {
@@ -192,7 +192,8 @@ public abstract class AbstractResponse extends CommonImpl implements Response {
 
   protected void triggerEndHandlers() {
     if (endHandler != null) {
-      for (Handler<Void> handler : endHandler) {
+      Handler<Void> handler;
+      while ((handler = endHandler.pollFirst()) != null) {
         handler.handle(null);
       }
     }

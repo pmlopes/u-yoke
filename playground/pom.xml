@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>core</artifactId>
+  <artifactId>playground</artifactId>
   <packaging>jar</packaging>
 
   <parent>
@@ -12,11 +12,7 @@
     <relativePath>..</relativePath>
   </parent>
 
-  <properties>
-    <jackson.version>2.5.3</jackson.version>
-  </properties>
-
-  <name>core</name>
+  <name>playground</name>
 
   <dependencies>
     <!-- Code hints Support -->
@@ -25,23 +21,6 @@
       <artifactId>annotations</artifactId>
       <version>13.0</version>
       <optional>true</optional>
-    </dependency>
-    <!-- JSON Support -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <!-- JSON POJO optimization -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-afterburner</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>

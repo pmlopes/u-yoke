@@ -1,13 +1,14 @@
 package io.u.yoke.http;
 
-import io.u.yoke.http.cookie.Cookies;
 import io.u.yoke.http.header.Headers;
-import io.u.yoke.http.form.Files;
+import io.u.yoke.traits.http.CookieTrait;
+import io.u.yoke.traits.http.FileUploadTrait;
+import io.u.yoke.traits.http.FormDataTrait;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public interface Request extends Headers, Cookies, Files {
+public interface Request extends Headers, CookieTrait, FormDataTrait, FileUploadTrait {
 
   <T> T getNativeRequest();
 
@@ -71,23 +72,6 @@ public interface Request extends Headers, Cookies, Files {
    * The getQuery part of the getURI. For example someparam=32&amp;someotherparam=x
    */
   String getQuery();
-
-  /**
-   * Returns a list of all the parameters names in the getRequest.
-   */
-  Iterable<String> getParams();
-
-  /**
-   * Return getRequest getParam by name.
-   * <p/>
-   * A getParam can be a getPath getParam, getQuery getParam or form getParam.
-   *
-   * @param name the getParam we are looking for.
-   * @return its value
-   */
-  String getParam(@NotNull String name);
-
-  Iterable<String> getParamValues(@NotNull String name);
 
   /**
    * Set getRequest URI.

@@ -1,19 +1,19 @@
 package io.u.yoke.http.impl;
 
-import io.u.yoke.http.cookie.Cookies;
 import io.u.yoke.http.header.Headers;
+import io.u.yoke.traits.http.CookieTrait;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.HttpCookie;
 import java.util.*;
 
-abstract class CommonImpl implements Headers, Cookies {
+abstract class Common implements Headers, CookieTrait {
 
   private final Headers headers;
 
   private List<HttpCookie> cookies;
 
-  public CommonImpl(Headers headers) {
+  public Common(Headers headers) {
     this.headers = headers;
   }
 
@@ -72,6 +72,10 @@ abstract class CommonImpl implements Headers, Cookies {
 
   @Override
   public void addCookie(@NotNull HttpCookie cookie) {
+    if (cookies == null) {
+      cookies = new LinkedList<>();
+    }
+
     cookies.add(cookie);
   }
 }

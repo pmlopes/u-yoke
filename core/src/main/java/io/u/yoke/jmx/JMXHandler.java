@@ -16,11 +16,11 @@ public class JMXHandler<C extends Context> implements JMXHandlerMBean<C> {
 
   private boolean enabled = true;
 
-
-  public JMXHandler(@NotNull List<JMXHandlerMBean<C>> handlers, @NotNull String route, String prefix, @NotNull String method, @NotNull Handler<C> delegate) {
+  @SuppressWarnings("unchecked")
+  public JMXHandler(@NotNull List<JMXHandlerMBean<C>> handlers, @NotNull String route, String prefix, @NotNull String method, @NotNull Handler<? extends Context> delegate) {
     this.prefix = prefix;
     this.handlers = handlers;
-    this.delegate = delegate;
+    this.delegate = (Handler<C>) delegate;
 
     // register on JMX
     try {

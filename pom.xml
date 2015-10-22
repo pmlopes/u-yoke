@@ -90,6 +90,7 @@
   </build>
 
   <modules>
+    <!--<module>playground</module>-->
     <module>core</module>
     <module>handlers</module>
     <module>vertx</module>
@@ -99,6 +100,7 @@
     <module>engine/handlebars</module>
     <module>engine/mustache</module>
     <module>engine/jade</module>
+    <module>session-store/memory</module>
     <module>example</module>
     <module>examples/techempower</module>
     <module>examples/restful</module>

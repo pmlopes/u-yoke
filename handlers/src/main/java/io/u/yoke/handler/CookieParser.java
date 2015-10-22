@@ -68,7 +68,12 @@ public class CookieParser implements Handler<Context> {
     // install a engine to sign getResponse cookie
     ctx.getResponse().headersHandler(v -> {
       for (HttpCookie cookie : ctx.getResponse().getCookies()) {
-        cookie.setValue("s:" + Security.sign(cookie.getValue(), mac));
+        final String value = cookie.getValue();
+        if (value != null && value.length() > 0) {
+          cookie.setValue("s:" + Security.sign(value, mac));
+        } else {
+          cookie.setValue("");
+        }
       }
     });
 

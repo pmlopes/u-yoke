@@ -11,11 +11,20 @@ public interface Yoke {
 
   static Yoke getDefault() {
     ServiceLoader<Yoke> ldr = ServiceLoader.load(Yoke.class);
-    for (Yoke provider : ldr) {
-      // TODO: handle more than 1
-      return provider;
+    Yoke provider = null;
+    for (Yoke impl : ldr) {
+      if (provider == null) {
+        provider = impl;
+      } else {
+        throw new Error("More than one provider registered!");
+      }
     }
-    throw new Error("No Yoke provider registered");
+
+    if (provider == null) {
+      throw new Error("No Yoke provider registered");
+    }
+
+    return provider;
   }
 
   /**
@@ -32,9 +41,9 @@ public interface Yoke {
    * @param mount The mount prefix
    * @param handler The engine add to the chain
    */
-  Yoke use(@NotNull String mount, @NotNull Handler<Context> handler);
+  Yoke use(@NotNull String mount, @NotNull Handler<? extends Context> handler);
 
-  default Yoke use(@NotNull Handler<Context> handler) {
+  default Yoke use(@NotNull Handler<? extends Context> handler) {
     return use("/", handler);
   }
 

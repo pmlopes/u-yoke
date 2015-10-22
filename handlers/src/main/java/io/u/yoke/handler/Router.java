@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  */
 public class Router implements Handler<Context> {
 
-  private final Map<Method, List<Route>> routes = new EnumMap<>(Method.class);
+  private final Map<Method, List<Route>> routes = new IdentityHashMap<>();
 
   private final Map<String, Handler<Context>> paramHandlers = new HashMap<>();
 

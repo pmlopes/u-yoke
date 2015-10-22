@@ -1,19 +1,17 @@
 package io.u.yoke.http;
 
 import io.u.yoke.Handler;
-import io.u.yoke.http.cookie.Cookies;
 import io.u.yoke.http.header.Headers;
+import io.u.yoke.traits.http.CookieTrait;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.nio.channels.FileChannel;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-public interface Response extends Headers, Cookies {
+public interface Response extends Headers, CookieTrait {
 
   <T> T getNativeResponse();
 

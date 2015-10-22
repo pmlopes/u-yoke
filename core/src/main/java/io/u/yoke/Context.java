@@ -1,45 +1,16 @@
 package io.u.yoke;
 
 import io.u.yoke.http.Method;
-import io.u.yoke.http.Request;
-import io.u.yoke.http.Response;
 import io.u.yoke.http.Status;
+import io.u.yoke.traits.http.ExchangeTrait;
+import io.u.yoke.traits.http.session.SessionTrait;
+import io.u.yoke.traits.StoreTrait;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.HttpCookie;
 import java.time.Instant;
 
-public interface Context {
-
-  Request getRequest();
-
-  Response getResponse();
-
-  /**
-   * Allow getting properties in a generified way.
-   *
-   * @param name The key to get
-   * @return {R} The found object
-   */
-  <R> R getAt(@NotNull final String name);
-
-  /**
-   * Allow getting properties in a generified way and return defaultValue if the key does not exist.
-   *
-   * @param name         The key to get
-   * @param defaultValue value returned when the key does not exist
-   * @return {R} The found object
-   */
-  <R> R getAt(@NotNull final String name, R defaultValue);
-
-  /**
-   * Allows putting a value into the context
-   *
-   * @param name  the key to store
-   * @param value the value to store
-   * @return {R} the previous value or null
-   */
-  <R> R putAt(@NotNull final String name, R value);
+public interface Context extends ExchangeTrait, StoreTrait, SessionTrait {
 
   default void fail(Status statusCode) {
     fail(statusCode, statusCode.getDescription());

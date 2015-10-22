@@ -3,14 +3,12 @@ package io.u.yoke.http.impl;
 import io.u.yoke.Context;
 import io.u.yoke.http.*;
 import io.u.yoke.http.header.Headers;
-import io.u.yoke.json.JSON;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
-public abstract class AbstractRequest extends CommonImpl implements Request {
+public abstract class AbstractRequest extends Common implements Request {
 
   private static final List<Method> IDEMPOTENT_METHODS = Collections.unmodifiableList(Arrays.asList(
       Method.GET,

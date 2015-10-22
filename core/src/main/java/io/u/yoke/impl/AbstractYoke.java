@@ -50,7 +50,7 @@ public abstract class AbstractYoke implements Yoke {
    * @param handler The engine add to the chain
    */
   @Override
-  public Yoke use(@NotNull String mount, @NotNull Handler<Context> handler) {
+  public Yoke use(@NotNull String mount, @NotNull Handler<? extends Context> handler) {
     handlers.add(new JMXHandler<>(handlers, mount, mount, "ALL", handler));
     return this;
   }
