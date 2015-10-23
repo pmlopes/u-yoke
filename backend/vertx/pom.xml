@@ -9,7 +9,7 @@
     <groupId>io.u.yoke</groupId>
     <artifactId>yoke</artifactId>
     <version>0.1</version>
-    <relativePath>..</relativePath>
+    <relativePath>../..</relativePath>
   </parent>
 
   <name>vertx</name>

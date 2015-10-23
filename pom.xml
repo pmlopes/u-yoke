@@ -92,18 +92,17 @@
   <modules>
     <module>core</module>
     <module>handlers</module>
-    <module>vertx</module>
-    <module>netty</module>
-    <module>jetty</module>
-    <module>undertow</module>
+    <module>backend/vertx</module>
+    <module>backend/netty</module>
+    <module>backend/jetty</module>
+    <module>backend/undertow</module>
     <module>engine/handlebars</module>
     <module>engine/mustache</module>
     <module>engine/jade</module>
     <module>session-store/memory</module>
-    <module>example</module>
+    <module>examples/nashorn</module>
     <module>examples/techempower</module>
     <module>examples/restful</module>
-    <module>examples/session</module>
 
     <module>integration</module>
   </modules>
