@@ -90,7 +90,6 @@
   </build>
 
   <modules>
-    <!--<module>playground</module>-->
     <module>core</module>
     <module>handlers</module>
     <module>vertx</module>
@@ -104,6 +103,9 @@
     <module>example</module>
     <module>examples/techempower</module>
     <module>examples/restful</module>
+    <module>examples/session</module>
+
+    <module>integration</module>
   </modules>
 
 </project>

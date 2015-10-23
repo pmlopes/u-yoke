@@ -209,6 +209,11 @@ public class BodyParser implements Handler<Context> {
                 };
               };
             }
+
+            @Override
+            public void remove(String parameter) {
+              // NO-OP
+            }
           });
         }
         if (!ctx.getAt("canceled", false)) {

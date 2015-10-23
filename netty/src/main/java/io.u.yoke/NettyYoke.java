@@ -22,44 +22,49 @@ import java.util.concurrent.TimeUnit;
 
 public final class NettyYoke extends AbstractYoke {
 
-  private static final FastThreadLocal<DateFormat> FORMAT = new FastThreadLocal<DateFormat>() {
-    @Override
-    protected DateFormat initialValue() {
-      return new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
-    }
-  };
+//  private static final FastThreadLocal<DateFormat> FORMAT = new FastThreadLocal<DateFormat>() {
+//    @Override
+//    protected DateFormat initialValue() {
+//      return new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+//    }
+//  };
 
-  private final EventLoopGroup eventLoopGroup;
+  private final boolean epool;
   private final Class<? extends ServerChannel> serverChannelClass;
 
-  private volatile CharSequence date = HttpHeaders.newEntity(FORMAT.get().format(new Date()));
+  private EventLoopGroup eventLoopGroup;
+
+//  private volatile CharSequence date = HttpHeaders.newEntity(FORMAT.get().format(new Date()));
 
   public NettyYoke() {
 
-    if (Epoll.isAvailable()) {
-      eventLoopGroup = new EpollEventLoopGroup();
+    epool = Epoll.isAvailable();
+
+    if (epool) {
       serverChannelClass = EpollServerSocketChannel.class;
     } else {
-      eventLoopGroup = new NioEventLoopGroup();
       serverChannelClass = NioServerSocketChannel.class;
     }
   }
 
   @Override
   public void listen(int port) {
+
+    eventLoopGroup = epool ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+
     try {
       final InetSocketAddress inet = new InetSocketAddress(port);
       final ServerBootstrap b = new ServerBootstrap();
       final EventLoop eventLoop = eventLoopGroup.next();
 
-      eventLoop.scheduleWithFixedDelay(new Runnable() {
-        private final DateFormat format = FORMAT.get();
-
-        @Override
-        public void run() {
-          date = HttpHeaders.newEntity(format.format(new Date()));
-        }
-      }, 1000, 1000, TimeUnit.MILLISECONDS);
+//      eventLoop.scheduleWithFixedDelay(new Runnable() {
+//        private final DateFormat format = FORMAT.get();
+//
+//        @Override
+//        public void run() {
+//          date = HttpHeaders.newEntity(format.format(new Date()));
+//        }
+//      }, 1000, 1000, TimeUnit.MILLISECONDS);
 
 
       b.option(ChannelOption.SO_BACKLOG, 1024);
@@ -128,7 +133,9 @@ public final class NettyYoke extends AbstractYoke {
   @Override
   public void close() {
     try {
-      eventLoopGroup.shutdownGracefully().sync();
+      if (eventLoopGroup != null) {
+        eventLoopGroup.shutdownGracefully().sync();
+      }
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }

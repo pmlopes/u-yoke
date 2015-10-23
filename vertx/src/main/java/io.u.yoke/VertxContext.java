@@ -2,9 +2,7 @@ package io.u.yoke;
 
 import io.u.yoke.http.Request;
 import io.u.yoke.http.Response;
-import io.u.yoke.http.Status;
 import io.u.yoke.impl.AbstractContext;
-import io.u.yoke.impl.AbstractYoke;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 import org.jetbrains.annotations.NotNull;

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Base64;
 
 public interface Security {
@@ -59,6 +60,14 @@ public interface Security {
    * @return Key implementation
    */
   Key getKey(final @NotNull String alias);
+
+  /**
+   * Load/Create a new Certificate
+   *
+   * @param alias the alias on the store
+   * @return the certificate
+   */
+  X509Certificate getCertificate(final @NotNull String alias);
 
   /**
    * Creates a new Cipher

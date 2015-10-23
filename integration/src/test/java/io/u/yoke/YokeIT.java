@@ -1,25 +1,12 @@
 package io.u.yoke;
 
-import org.junit.*;
+import io.u.yoke.base.AbstractIT;
+import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.*;
-import static io.u.yoke.test.Yoke.yoke;
 import static org.hamcrest.Matchers.*;
 
-public class YokeTest {
-
-  private Yoke app;
-
-  @Before
-  public void setUp() throws Exception {
-    app = yoke();
-  }
-
-  @After
-  public void tearDown() {
-    // close yoke
-    app.clear();
-  }
+public class YokeIT extends AbstractIT {
 
   @Test
   public void testBootstrap() {
@@ -95,4 +82,5 @@ public class YokeTest {
         .statusCode(404)
         .body(equalTo("oops!"));
   }
+
 }

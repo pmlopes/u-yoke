@@ -80,7 +80,9 @@ public class UndertowResponse extends AbstractResponse {
 
   @Override
   public void end() {
+    triggerHeadersHandlers();
     exchange.getResponseSender().close();
+    triggerEndHandlers();
   }
 
   @Override

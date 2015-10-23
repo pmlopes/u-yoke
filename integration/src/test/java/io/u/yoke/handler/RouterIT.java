@@ -1,8 +1,6 @@
 package io.u.yoke.handler;
 
-import io.u.yoke.Yoke;
-import org.junit.After;
-import org.junit.Before;
+import io.u.yoke.base.AbstractIT;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
@@ -10,24 +8,10 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.jayway.restassured.RestAssured.get;
-import static io.u.yoke.test.Yoke.yoke;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
-public class RouterTest {
-
-  private Yoke app;
-
-  @Before
-  public void setUp() throws Exception {
-    app = yoke();
-  }
-
-  @After
-  public void tearDown() {
-    // close yoke
-    app.clear();
-  }
+public class RouterIT extends AbstractIT {
 
   @Test
   public void testRouterWithParams() {

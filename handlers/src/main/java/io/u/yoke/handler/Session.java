@@ -71,33 +71,33 @@ public class Session implements Handler<Context> {
 
     final String sessionId = sessionCookie != null ? sessionCookie.getValue() : null;
 
-    // call us when headers are being putAt for the getResponse
-    response.headersHandler(done -> {
-      String currentSessionId = ctx.getSessionId();
+    // we should only send secure cookies over https
+    if (cookie.getSecure() && !ctx.isSecure()) {
+      // TODO: report warning
+      System.err.println("ERR: sending secure cookies not using HTTP is not allowed");
+    } else {
+      // call us when headers are being written to the response
+      response.headersHandler(done -> {
+        String currentSessionId = ctx.getSessionId();
 
-      // session was removed
-      if (currentSessionId == null) {
-        if (sessionCookie != null) {
-          cookie.setValue("");
-          cookie.setMaxAge(0);
-          response.addCookie(cookie);
-        }
-      } else {
-        // only send secure cookies over https
-        if (cookie.getSecure() && !ctx.isSecure()) {
-          // TODO: report warning
-          System.out.println("WARN: sending cookies not using HTTP can be hazardous");
-        }
+        // session was removed
+        if (currentSessionId == null) {
+          if (sessionCookie != null) {
+            cookie.setValue("");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+          }
+        } else {
+          // compare hashes, no need to set-cookie if unchanged
+          if (!currentSessionId.equals(sessionId)) {
+            // update value since the 2 have changed
+            cookie.setValue(currentSessionId);
 
-        // compare hashes, no need to set-cookie if unchanged
-        if (!currentSessionId.equals(sessionId)) {
-          // update value since the 2 have changed
-          cookie.setValue(currentSessionId);
-
-          response.addCookie(cookie);
+            response.addCookie(cookie);
+          }
         }
-      }
-    });
+      });
+    }
 
     if (sessionId == null) {
       ctx.next();

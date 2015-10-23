@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>vertx</artifactId>
+  <artifactId>integration</artifactId>
   <packaging>jar</packaging>
 
   <parent>
@@ -12,36 +12,60 @@
     <relativePath>..</relativePath>
   </parent>
 
-  <name>vertx</name>
+  <name>integration</name>
 
   <properties>
-    <restassured.version>2.5.0</restassured.version>
+    <restassured.version>2.6.0</restassured.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-core</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-
-    <dependency>
       <groupId>io.u.yoke</groupId>
       <artifactId>core</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>io.u.yoke</groupId>
       <artifactId>handlers</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-      <version>13.0</version>
-      <scope>provided</scope>
+      <groupId>io.u.yoke</groupId>
+      <artifactId>jetty</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!--<dependency>-->
+      <!--<groupId>io.u.yoke</groupId>-->
+      <!--<artifactId>netty</artifactId>-->
+      <!--<version>${project.version}</version>-->
+      <!--<scope>test</scope>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>io.u.yoke</groupId>
+      <artifactId>vertx</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!--<dependency>-->
+      <!--<groupId>io.u.yoke</groupId>-->
+      <!--<artifactId>undertow</artifactId>-->
+      <!--<version>${project.version}</version>-->
+      <!--<scope>test</scope>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>io.u.yoke</groupId>
+      <artifactId>session-store.memory</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -73,18 +97,27 @@
     </dependency>
 
     <dependency>
-      <groupId>io.u.yoke</groupId>
-      <artifactId>session-store.memory</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.19</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

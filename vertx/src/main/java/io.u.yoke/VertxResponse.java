@@ -1,6 +1,5 @@
 package io.u.yoke;
 
-
 import io.u.yoke.http.Status;
 import io.u.yoke.http.impl.AbstractResponse;
 import io.vertx.core.Vertx;
@@ -12,7 +11,6 @@ final class VertxResponse extends AbstractResponse {
   private final io.vertx.core.Context context;
 
   private final HttpServerResponse res;
-  private final Context ctx;
 
   private boolean hasBody;
 
@@ -22,7 +20,6 @@ final class VertxResponse extends AbstractResponse {
     context = Vertx.currentContext();
 
     this.res = res;
-    this.ctx = ctx;
     setStatus(Status.OK);
     hasBody = false;
   }
@@ -71,7 +68,7 @@ final class VertxResponse extends AbstractResponse {
 
   @Override
   public boolean isHeaderSent() {
-    return false;
+    return res.headWritten();
   }
 
   @Override
@@ -91,9 +88,13 @@ final class VertxResponse extends AbstractResponse {
 
   @Override
   public void end() {
-    triggerHeadersHandlers();
-    res.end();
-    triggerEndHandlers();
+    // this call can come from other thread,
+    // so we are homing the run in the right context
+    context.runOnContext(v -> {
+      triggerHeadersHandlers();
+      res.end();
+      triggerEndHandlers();
+    });
   }
 
   @Override
@@ -132,6 +133,12 @@ final class VertxResponse extends AbstractResponse {
 
   @Override
   public void sendFile(String file) {
-    res.sendFile(file);
+    // this call can come from other thread,
+    // so we are homing the run in the right context
+    context.runOnContext(v -> {
+      triggerHeadersHandlers();
+      res.sendFile(file);
+      triggerEndHandlers();
+    });
   }
 }

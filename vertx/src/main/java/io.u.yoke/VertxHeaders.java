@@ -29,8 +29,7 @@ class VertxHeaders implements Headers {
 
   @Override
   public void setHeader(@NotNull String name, String value) {
-    headers.remove(name);
-    headers.add(name, value);
+    headers.set(name, value);
   }
 
   @Override

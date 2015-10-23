@@ -1,30 +1,14 @@
 package io.u.yoke.handler;
 
-import io.u.yoke.Yoke;
+import io.u.yoke.base.AbstractIT;
 import io.u.yoke.http.header.Headers;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.get;
-import static io.u.yoke.test.Yoke.yoke;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class FaviconTest {
-
-  private Yoke app;
-
-  @Before
-  public void setUp() throws Exception {
-    app = yoke();
-  }
-
-  @After
-  public void tearDown() {
-    // close yoke
-    app.clear();
-  }
+public class FaviconIT extends AbstractIT {
 
   @Test
   public void testFavicon() {

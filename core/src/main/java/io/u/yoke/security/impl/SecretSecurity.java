@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
+import java.security.cert.X509Certificate;
 import java.util.*;
 
 public class SecretSecurity implements io.u.yoke.security.Security {
@@ -37,12 +38,7 @@ public class SecretSecurity implements io.u.yoke.security.Security {
     secret = bytes;
   }
 
-  /**
-   * Creates a new Message Authentication Code
-   *
-   * @param alias algorithm to use e.g.: HmacSHA256
-   * @return Mac implementation
-   */
+  @Override
   public Mac getMac(final @NotNull String alias) {
     try {
       Mac mac = Mac.getInstance(getAlgorithm(alias));
@@ -54,6 +50,7 @@ public class SecretSecurity implements io.u.yoke.security.Security {
     }
   }
 
+  @Override
   public Signature getSignature(final @NotNull String alias) {
     try {
       final KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
@@ -67,12 +64,14 @@ public class SecretSecurity implements io.u.yoke.security.Security {
     }
   }
 
-  /**
-   * Creates a new Crypto KEY
-   *
-   * @return Key implementation
-   */
+  @Override
   public Key getKey(final @NotNull String alias) {
     return new SecretKeySpec(secret, getAlgorithm(alias));
   }
+
+  @Override
+  public X509Certificate getCertificate(final @NotNull String alias) {
+    throw new UnsupportedOperationException();
+  }
+
 }

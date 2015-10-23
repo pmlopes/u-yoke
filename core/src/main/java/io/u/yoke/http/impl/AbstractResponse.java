@@ -13,7 +13,9 @@ import io.u.yoke.util.HTTPEncode;
 import io.u.yoke.util.MimeType;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.net.HttpCookie;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -162,13 +164,13 @@ public abstract class AbstractResponse extends Common implements Response {
       if (headersHandler != null) {
         Handler<Void> handler;
         while ((handler = headersHandler.pollFirst()) != null) {
-          handler.handle(null);
+          handler.handle();
         }
       }
 
-      // convert the cookie putAt to the right get
+      // convert the cookies
       for (HttpCookie cookie : getCookies()) {
-        ctx.set(Headers.SET_COOKIE, ServerCookieEncoder.encode(cookie));
+        appendHeader(Headers.SET_COOKIE, ServerCookieEncoder.encode(cookie));
       }
 
 //      // if there is a filter then putAt the right get

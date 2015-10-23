@@ -76,15 +76,10 @@ public class KeyStoreSecurity implements io.u.yoke.security.Security {
 
   public Signature getSignature(final @NotNull String alias) {
     try {
-      final PrivateKey privateKey = (PrivateKey) keys.get(alias);
-
       final X509Certificate certificate = (X509Certificate) keyStore.getCertificate(alias);
 
-      Signature signature = Signature.getInstance(certificate.getSigAlgName());
-      signature.initSign(privateKey);
-
-      return signature;
-    } catch (NoSuchAlgorithmException | InvalidKeyException | KeyStoreException e) {
+      return Signature.getInstance(certificate.getSigAlgName());
+    } catch (NoSuchAlgorithmException | KeyStoreException e) {
       throw new RuntimeException(e);
     }
   }
@@ -96,5 +91,13 @@ public class KeyStoreSecurity implements io.u.yoke.security.Security {
    */
   public Key getKey(final @NotNull String alias) {
     return keys.get(alias);
+  }
+
+  public X509Certificate getCertificate(final @NotNull String alias) {
+    try {
+      return (X509Certificate) keyStore.getCertificate(alias);
+    } catch (KeyStoreException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

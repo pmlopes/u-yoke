@@ -7,4 +7,6 @@ public interface Form {
   Iterable<String> getParamValues(String parameter);
 
   Iterable<String> getParams();
+
+  void remove(String parameter);
 }

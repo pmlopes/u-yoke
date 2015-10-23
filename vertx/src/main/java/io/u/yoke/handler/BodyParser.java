@@ -183,6 +183,11 @@ public class BodyParser implements Handler<Context> {
                 public Iterable<String> getParams() {
                   return form.names();
                 }
+
+                @Override
+                public void remove(String parameter) {
+                  form.remove(parameter);
+                }
               });
             }
           }

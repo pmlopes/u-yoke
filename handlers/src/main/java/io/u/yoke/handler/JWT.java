@@ -1,138 +1,117 @@
-//package com.jetdrone.vertx.yoke.middleware;
-//
-//import com.jetdrone.vertx.yoke.Middleware;
-//import com.jetdrone.vertx.yoke.Yoke;
-//import com.jetdrone.vertx.yoke.core.YokeException;
-//import org.jetbrains.annotations.NotNull;
-//import org.vertx.java.core.Handler;
-//import org.vertx.java.core.json.JsonObject;
-//
-//import java.util.regex.Pattern;
-//
-//public class JWT extends Middleware {
-//
-//    private static final Pattern BEARER = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE);
-//
-//    public interface JWTHandler {
-//        void handle(JsonObject token, Handler<Object> result);
-//    }
-//
-//    private final String skip;
-//
-//    private com.jetdrone.vertx.yoke.security.JWT jwt;
-//
-//    private final JWTHandler handler;
-//
-//    public JWT() {
-//        this.skip = null;
-//        this.handler = null;
-//    }
-//
-//    public JWT(final @NotNull String skip) {
-//        this.skip = skip;
-//        this.handler = null;
-//    }
-//
-//    public JWT(final @NotNull String skip, final @NotNull JWTHandler handler) {
-//        this.skip = skip;
-//        this.handler = handler;
-//    }
-//
-//    public JWT(final @NotNull JWTHandler handler) {
-//        this.skip = null;
-//        this.handler = handler;
-//    }
-//
-//    @Override
-//    public Middleware init(@NotNull final Yoke yoke, @NotNull final String mount) {
-//        super.init(yoke, mount);
-//
-//        jwt = new com.jetdrone.vertx.yoke.security.JWT(yoke.security());
-//        return this;
-//    }
-//
-//    @Override
-//    public void handle(@NotNull final YokeRequest getRequest, @NotNull final Handler<Object> next) {
-//        String token = null;
-//
-//        if ("OPTIONS".equals(getRequest.method()) && getRequest.getHeader("access-control-getRequest-headers") != null) {
-//            for (String ctrlReq : getRequest.getHeader("access-control-getRequest-headers").split(",")) {
-//                if (ctrlReq.contains("authorization")) {
-//                    next.handle(null);
-//                    return;
-//                }
-//            }
-//        }
-//
-//        if (skip != null && skip.contains(getRequest.normalizedPath())) {
-//            next.handle(null);
-//            return;
-//        }
-//
-//        final String authorization = getRequest.getHeader("authorization");
-//
-//        if (authorization != null) {
-//            String[] parts = authorization.split(" ");
-//            if (parts.length == 2) {
-//                final String scheme = parts[0],
-//                             credentials = parts[1];
-//
-//                if (BEARER.matcher(scheme).matches()) {
-//                    token = credentials;
-//                }
-//            } else {
-//                next.handle(new YokeException(401, "Format is Authorization: Bearer [token]"));
-//                return;
-//            }
-//        } else {
-//            next.handle(new YokeException(401, "No Authorization header was found"));
-//            return;
-//        }
-//
-//        try {
-//            final JsonObject jwtToken = jwt.decode(token);
-//
-//            // All dates in JWT are of type NumericDate
-//            // a NumericDate is: numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until
-//            // the specified UTC date/time, ignoring leap seconds
-//            final long now = System.currentTimeMillis() / 1000;
-//
-//            if (jwtToken.containsField("iat")) {
-//                Long iat = jwtToken.getLong("iat");
-//                // issue at must be in the past
-//                if (iat > now) {
-//                    next.handle(new YokeException(401, "Invalid Token!"));
-//                    return;
-//                }
-//            }
-//
-//            if (jwtToken.containsField("nbf")) {
-//                Long nbf = jwtToken.getLong("nbf");
-//                // not before must be after now
-//                if (nbf > now) {
-//                    next.handle(new YokeException(401, "Invalid Token!"));
-//                    return;
-//                }
-//            }
-//
-//            if (jwtToken.containsField("exp")) {
-//                Long exp = jwtToken.getLong("exp");
-//                // expires must be after now
-//                if (now > exp) {
-//                    next.handle(new YokeException(401, "Invalid Token!"));
-//                    return;
-//                }
-//            }
-//            getRequest.put("jwt", jwtToken);
-//
-//            if (handler == null) {
-//                next.handle(null);
-//                return;
-//            }
-//
-//            handler.handle(jwtToken, next);
-//        } catch (RuntimeException e) {
-//            next.handle(new YokeException(401, e));
-//        }
-//    }
-//}
+package io.u.yoke.handler;
+
+import io.u.yoke.Context;
+import io.u.yoke.Handler;
+import io.u.yoke.http.Request;
+import io.u.yoke.http.Status;
+import io.u.yoke.security.Security;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static io.u.yoke.http.Method.*;
+import static io.u.yoke.http.header.Headers.*;
+
+public class JWT implements Handler<Context> {
+
+  private static final Pattern BEARER = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE);
+
+  private io.u.yoke.security.JWT jwt;
+
+  private final Handler<Context> handler;
+
+  public JWT(@NotNull final Security security) {
+    this(security, null);
+  }
+
+  public JWT(@NotNull final Security security, final Handler<Context> handler) {
+    this.jwt = new io.u.yoke.security.JWT(security);
+    this.handler = handler;
+  }
+
+  @Override
+  public void handle(@NotNull final Context ctx) {
+
+    final Request req = ctx.getRequest();
+
+    String token = null;
+
+    if (OPTIONS == req.getMethod() && ctx.get(ACCESS_CONTROL_REQUEST_HEADERS) != null) {
+      for (String ctrlReq : ctx.get(ACCESS_CONTROL_REQUEST_HEADERS).split(",")) {
+        if (ctrlReq.contains(AUTHORIZATION)) {
+          ctx.next();
+          return;
+        }
+      }
+    }
+
+    final String authorization = ctx.get(AUTHORIZATION);
+
+    if (authorization != null) {
+      String[] parts = authorization.split(" ");
+      if (parts.length == 2) {
+        final String scheme = parts[0],
+            credentials = parts[1];
+
+        if (BEARER.matcher(scheme).matches()) {
+          token = credentials;
+        }
+      } else {
+        // Format is Authorization: Bearer [token]
+        ctx.fail(Status.UNAUTHORIZED);
+        return;
+      }
+    } else {
+      // No Authorization header was found
+      ctx.fail(Status.UNAUTHORIZED);
+      return;
+    }
+
+    try {
+      final Map jwtToken = jwt.decode(token);
+
+      // All dates in JWT are of type NumericDate
+      // a NumericDate is: numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until
+      // the specified UTC date/time, ignoring leap seconds
+      final long now = System.currentTimeMillis() / 1000;
+
+      if (jwtToken.containsKey("iat")) {
+        Long iat = (Long) jwtToken.get("iat");
+        // issue at must be in the past
+        if (iat > now) {
+          ctx.fail(Status.UNAUTHORIZED);
+          return;
+        }
+      }
+
+      if (jwtToken.containsKey("nbf")) {
+        Long nbf = (Long) jwtToken.get("nbf");
+        // not before must be after now
+        if (nbf > now) {
+          ctx.fail(Status.UNAUTHORIZED);
+          return;
+        }
+      }
+
+      if (jwtToken.containsKey("exp")) {
+        Long exp = (Long) jwtToken.get("exp");
+        // expires must be after now
+        if (now > exp) {
+          ctx.fail(Status.UNAUTHORIZED);
+          return;
+        }
+      }
+      ctx.putAt("jwt", jwtToken);
+
+      if (handler == null) {
+        ctx.next();
+        return;
+      }
+
+      handler.handle(ctx);
+    } catch (RuntimeException e) {
+      ctx.fail(e);
+    }
+  }
+}
