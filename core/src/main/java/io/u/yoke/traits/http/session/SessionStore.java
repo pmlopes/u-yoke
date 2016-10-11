@@ -20,7 +20,7 @@ public interface SessionStore {
     }
 
     if (provider == null) {
-      throw new Error("No SessionStore provider registered");
+      System.err.println("No SessionStore provider registered");
     }
 
     return provider;

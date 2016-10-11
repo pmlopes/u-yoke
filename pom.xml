@@ -103,6 +103,7 @@
     <module>examples/nashorn</module>
     <module>examples/techempower</module>
     <module>examples/restful</module>
+    <module>examples/ximedes</module>
 
     <module>integration</module>
   </modules>

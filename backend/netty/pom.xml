@@ -15,7 +15,7 @@
   <name>netty</name>
 
   <properties>
-    <netty.version>4.0.30.Final</netty.version>
+    <netty.version>4.1.1.Final</netty.version>
     <restassured.version>2.5.0</restassured.version>
   </properties>
 

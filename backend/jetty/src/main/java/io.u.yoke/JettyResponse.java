@@ -16,6 +16,7 @@ final class JettyResponse extends AbstractResponse {
 
   JettyResponse(JettyContext ctx, HttpServletResponse res) {
     super(ctx, new JettyResponseHeaders(res));
+    System.out.println(Thread.currentThread());
     this.res = res;
     hasBody = false;
   }
@@ -90,6 +91,8 @@ final class JettyResponse extends AbstractResponse {
 
   @Override
   public void end(String chunk) {
+    System.out.println(Thread.currentThread());
+
     if (chunk == null) {
       end();
       return;
@@ -99,11 +102,13 @@ final class JettyResponse extends AbstractResponse {
       setHeader(CONTENT_TYPE, "text/plain");
     }
 
+    res.setContentType(getHeader(CONTENT_TYPE));
+
     // TODO: respect character encoding header
     byte[] data = chunk.getBytes(StandardCharsets.UTF_8);
 
     if (getHeader(CONTENT_LENGTH) == null) {
-      setHeader(CONTENT_LENGTH, Integer.toString(data.length));
+      res.setContentLength(data.length);
     }
 
     _end();
@@ -113,8 +118,10 @@ final class JettyResponse extends AbstractResponse {
 
     try {
       res.getOutputStream().write(data);
+      res.getOutputStream().close();
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
+      //throw new RuntimeException(e);
     }
 
     triggerEndHandlers();
